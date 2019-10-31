@@ -1,0 +1,3 @@
+[run]
+source = PyrLesson_Finder
+omit = PyrLesson_Finder/test*
