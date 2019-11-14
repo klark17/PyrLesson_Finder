@@ -6,7 +6,7 @@ import zope.sqlalchemy
 # import or define all models here to ensure they are attached to the
 # Base.metadata prior to any initialization routines
 from .mymodel import MyModel  # flake8: noqa
-from .models import User, Participant, Lesson, Organization
+from .db_models import User, Participant, Lesson, Organization # flake8: noqa
 
 # run configure_mappers after defining all of the models to ensure
 # all relationships can be setup
@@ -59,6 +59,7 @@ def includeme(config):
     """
     settings = config.get_settings()
     settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
+    # settings['url'] = 'sqlite:///%(here)s/site.db'
 
     # use pyramid_tm to hook the transaction lifecycle to the request
     config.include('pyramid_tm')

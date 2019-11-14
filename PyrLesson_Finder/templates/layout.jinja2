@@ -1,64 +1,155 @@
 <!DOCTYPE html>
 <html lang="{{request.locale_name}}">
-  <head>
+<head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="pyramid web application">
-    <meta name="author" content="Pylons Project">
-    <link rel="shortcut icon" href="{{request.static_url('PyrLesson_Finder:static/pyramid-16x16.png')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" integrity="sha384-0s5Pv64cNZJieYFkXYOTId2HMA2Lfb6q2nAcx2n0RTLUnCAoTTsS0nKEO27XyKcY" crossorigin="anonymous"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
 
-    <title>Cookiecutter Starter project for the Pyramid Web Framework</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{request.static_url('PyrLesson_Finder:static/main.css')}}" rel="stylesheet">
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Custom styles for this scaffold -->
-    <link href="{{request.static_url('PyrLesson_Finder:static/theme.css')}}" rel="stylesheet">
-
-    <!-- HTML5 shiv and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" integrity="sha384-0s5Pv64cNZJieYFkXYOTId2HMA2Lfb6q2nAcx2n0RTLUnCAoTTsS0nKEO27XyKcY" crossorigin="anonymous"></script>
-      <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <div class="starter-template">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-2">
-            <img class="logo img-responsive" src="{{request.static_url('PyrLesson_Finder:static/pyramid.png') }}" alt="pyramid web framework">
-          </div>
-          <div class="col-md-10">
-            {% block content %}
-                <p>No content</p>
-            {% endblock content %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="links">
-            <ul>
-              <li><i class="glyphicon glyphicon-cog icon-muted"></i><a href="https://github.com/Pylons/pyramid">Github Project</a></li>
-              <li><i class="glyphicon glyphicon-globe icon-muted"></i><a href="https://webchat.freenode.net/?channels=pyramid">IRC Channel</a></li>
-              <li><i class="glyphicon glyphicon-home icon-muted"></i><a href="https://pylonsproject.org">Pylons Project</a></li>
-            </ul>
+    {% if title %}
+        <title>Lesson Finder - {{ title }}</title>
+    {% else %}
+        <title>Lesson Finder</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">Lesson Finder</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{{ url_for('about') }}">Home</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="{{ url_for('user.logout') }}">Logout</a>
+                <a class="nav-item nav-link" href="{{ url_for('profile') }}">Profile</a>
+              {% else  %}
+                <a class="nav-item nav-link" href="{{ url_for('user.login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+              {% endif %}
+              <a class="nav-item nav-link" href="{{ url_for('search') }}">Search</a>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="copyright">
-            Copyright &copy; Pylons Project
-          </div>
-        </div>
-      </div>
-    </div>
+      </nav>
+    </header>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="jumbotron text-right" id="parallax1">
+                <h1>Welcome to Lesson Finder</h1>
+                <h3>Search and sign up for activities in your area!</h3>
+			</div>
+		</div>
+	</div>
+	<main role='main' class='container'>
+		<div class="row">
+			<div class="col-md-8">
+			  {% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+				  {% for category, message in messages %}
+					<div class="alert alert-{{ category }}">
+					  {{ message }}
+					</div>
+				  {% endfor %}
+				{% endif %}
+			  {% endwith %}
+			  {% block content %}{% endblock %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				{% block content2 %}{% endblock %}
+			</div>
+		</div>
+	</main>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="parallax2">
+			</div>
+		</div>
+	</div>
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  </body>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
 </html>
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="{{request.locale_name}}">#}
+{#  <head>#}
+{#    <meta charset="utf-8">#}
+{#    <meta http-equiv="X-UA-Compatible" content="IE=edge">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <meta name="description" content="pyramid web application">#}
+{#    <meta name="author" content="Pylons Project">#}
+{#    <link rel="shortcut icon" href="{{request.static_url('PyrLesson_Finder:static/pyramid-16x16.png')}}">#}
+{##}
+{#    <title>Cookiecutter Starter project for the Pyramid Web Framework</title>#}
+{##}
+{#    <!-- Bootstrap core CSS -->#}
+{#    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">#}
+{##}
+{#    <!-- Custom styles for this scaffold -->#}
+{#    <link href="{{request.static_url('PyrLesson_Finder:static/theme.css')}}" rel="stylesheet">#}
+{##}
+{#    <!-- HTML5 shiv and Respond.js IE8 support of HTML5 elements and media queries -->#}
+    <!--[if lt IE 9]>
+{#      <!--<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" integrity="sha384-0s5Pv64cNZJieYFkXYOTId2HMA2Lfb6q2nAcx2n0RTLUnCAoTTsS0nKEO27XyKcY" crossorigin="anonymous"></script>-->#}
+{#      <!--<script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js" integrity="sha384-ZoaMbDF+4LeFxg6WdScQ9nnR1QC2MIRxA1O9KWEXQwns1G8UNyIEZIQidzb0T1fo" crossorigin="anonymous"></script>-->#}
+{#    <![endif]-->#}
+{#  </head>#}
+{##}
+{#  <body>#}
+
+{#    <div class="starter-template">#}
+{#      <div class="container">#}
+{#        <div class="row">#}
+{#          <div class="col-md-2">#}
+{#            <img class="logo img-responsive" src="{{request.static_url('PyrLesson_Finder:static/pyramid.png') }}" alt="pyramid web framework">#}
+{#          </div>#}
+{#          <div class="col-md-10">#}
+{#            {% block content %}#}
+{#                <p>No content</p>#}
+{#            {% endblock content %}#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#          <div class="links">#}
+{#            <ul>#}
+{#              <li><i class="glyphicon glyphicon-cog icon-muted"></i><a href="https://github.com/Pylons/pyramid">Github Project</a></li>#}
+{#              <li><i class="glyphicon glyphicon-globe icon-muted"></i><a href="https://webchat.freenode.net/?channels=pyramid">IRC Channel</a></li>#}
+{#              <li><i class="glyphicon glyphicon-home icon-muted"></i><a href="https://pylonsproject.org">Pylons Project</a></li>#}
+{#            </ul>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#          <div class="copyright">#}
+{#            Copyright &copy; Pylons Project#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{##}
+{##}
+{#    <!-- Bootstrap core JavaScript#}
+{#    ================================================== -->#}
+{#    <!-- Placed at the end of the document so the pages load faster -->#}
+{#    <script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>#}
+{#    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>#}
+{#  </body>#}
+{#</html>#}

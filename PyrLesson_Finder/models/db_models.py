@@ -36,10 +36,20 @@ class User(Base):
 	lessons = relationship('Lesson', secondary=lessons, backref=backref('selfParticipant', lazy='dynamic'))
 	dependents = relationship('Participant', backref=backref('guardian'))
 
-    # organization = relationship('Organization', uselist=False, backref='admin')
-    # roles = relationship('Role', secondary='user_roles', backref=backref('users', lazy='dynamic'))
-    # active = Column('is_active', Boolean(), nullable=False, server_default='0')
-    # organizer = relationship('Lesson', backref='contactEmail', lazy='dynamic')
+	# organization = relationship('Organization', uselist=False, backref='admin')
+	# roles = relationship('Role', secondary='user_roles', backref=backref('users', lazy='dynamic'))
+	# active = Column('is_active', Boolean(), nullable=False, server_default='0')
+	# organizer = relationship('Lesson', backref='contactEmail', lazy='dynamic')
+
+	def set_password(self, pw):
+		pwHash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
+		self.password_hash = pwHash.decode('utf8')
+
+	def check_password(self, pw):
+		if self.password_hash is not None:
+			expected_hash = self.password_hash.encode('utf8')
+			return bcrypt.checkpw(pw.encode('utf8'), expected_hash)
+		return False
 
 	def __repr__(self):
 		return f"User('{self.fName}', '{self.username}', '{self.email}')"
