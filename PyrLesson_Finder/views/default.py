@@ -15,7 +15,7 @@ from .. import models
 #         return Response(db_err_msg, content_type='text/plain', status=500)
 #     return {'one': one, 'project': 'PyrLesson_Finder'}
 
-@view_config(route_name='about', renderer='..templates/about.jinja2')
+@view_config(route_name='about', renderer='../templates/about.jinja2')
 def about(request):
     try:
         query = request.dbsession.query(models.User)
@@ -23,6 +23,11 @@ def about(request):
     except DBAPIError:
         return Response(db_err_msg, content_type='text/plain', status=500)
     return {'username': username, 'project': 'PyrLesson_Finder'}
+
+
+@view_config(route_name='signup', renderer='../templates/signup.jinja2')
+def signup():
+    return Response('OK')
 
 
 db_err_msg = """\

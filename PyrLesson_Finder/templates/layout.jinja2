@@ -27,18 +27,18 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{{ url_for('about') }}">Home</a>
+              <a class="nav-item nav-link" href="">Home</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('user.logout') }}">Logout</a>
-                <a class="nav-item nav-link" href="{{ url_for('profile') }}">Profile</a>
-              {% else  %}
-                <a class="nav-item nav-link" href="{{ url_for('user.login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('signup') }}">Sign Up</a>
-              {% endif %}
-              <a class="nav-item nav-link" href="{{ url_for('search') }}">Search</a>
+{#              {% if current_user.is_authenticated %}#}
+{#                <a class="nav-item nav-link" href="">Logout</a>#}
+{#                <a class="nav-item nav-link" href="">Profile</a>#}
+{#              {% else  %}#}
+                <a class="nav-item nav-link" href="">Login</a>
+                <a class="nav-item nav-link" href="/signup">Sign Up</a>
+{#              {% endif %}#}
+              <a class="nav-item nav-link" href="">Search</a>
             </div>
           </div>
         </div>
@@ -55,15 +55,15 @@
 	<main role='main' class='container'>
 		<div class="row">
 			<div class="col-md-8">
-			  {% with messages = get_flashed_messages(with_categories=true) %}
-				{% if messages %}
-				  {% for category, message in messages %}
-					<div class="alert alert-{{ category }}">
-					  {{ message }}
-					</div>
-				  {% endfor %}
-				{% endif %}
-			  {% endwith %}
+{#			  {% with messages = get_flashed_messages(with_categories=true) %}#}
+{#				{% if messages %}#}
+{#				  {% for category, message in messages %}#}
+{#					<div class="alert alert-{{ category }}">#}
+{#					  {{ message }}#}
+{#					</div>#}
+{#				  {% endfor %}#}
+{#				{% endif %}#}
+{#			  {% endwith %}#}
 			  {% block content %}{% endblock %}
 			</div>
 		</div>
