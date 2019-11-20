@@ -25,11 +25,6 @@ def about(request):
     return {'username': username, 'project': 'PyrLesson_Finder'}
 
 
-@view_config(route_name='signup', renderer='../templates/signup.jinja2')
-def signup():
-    return Response('OK')
-
-
 db_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:
