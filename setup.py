@@ -21,6 +21,7 @@ requires = [
     'SQLAlchemy',
     'transaction',
     'zope.sqlalchemy',
+    'wtforms==2.2.1'
 ]
 
 tests_require = [

@@ -4,6 +4,7 @@ def includeme(config):
     config.add_route('signup', '/signup')
     config.add_route('login', '/login')
     config.add_route('search', '/search')
+    config.add_route('profile', '/profile')
 # from pyramid.response import Response
 #
 # def hello_world(request):

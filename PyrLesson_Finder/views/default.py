@@ -1,8 +1,6 @@
 from pyramid.view import view_config
 from pyramid.response import Response
-
 from sqlalchemy.exc import DBAPIError
-
 from .. import models
 
 
@@ -17,12 +15,12 @@ from .. import models
 
 @view_config(route_name='about', renderer='../templates/about.jinja2')
 def about(request):
-    try:
-        query = request.dbsession.query(models.User)
-        username = query.filter(models.User.username == 'Test1User').first()
-    except DBAPIError:
-        return Response(db_err_msg, content_type='text/plain', status=500)
-    return {'username': username, 'project': 'PyrLesson_Finder'}
+    # try:
+    #     query = request.dbsession.query(models.User)
+    #     username = query.filter(models.User.username == 'Test1User').first()
+    # except DBAPIError:
+    #     return Response(db_err_msg, content_type='text/plain', status=500)
+    return {'project': 'PyrLesson_Finder'}
 
 
 db_err_msg = """\
