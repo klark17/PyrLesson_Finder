@@ -4,6 +4,7 @@ from pyramid.view import view_config
 from sqlalchemy.exc import DBAPIError
 from ..form import LoginForm, SignupForm
 from ..models import User
+from ..security import USERS, check_password
 
 db_err_msg = "Not Found"
 
@@ -19,7 +20,7 @@ def signup(request):
     return {'title': 'Signup', 'form': form}
 
 
-@view_config(route_name='login', match_param='action=login', renderer='../templates/login.jinja2')
+@view_config(route_name='login', renderer='../templates/login.jinja2')
 def login(request):
     user = User()
     form = LoginForm(request.POST)

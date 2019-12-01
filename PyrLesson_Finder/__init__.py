@@ -1,7 +1,7 @@
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
-# from .security import groupfinder
+from .security import groupfinder
 
 
 def main(global_config, **settings):
@@ -12,13 +12,13 @@ def main(global_config, **settings):
         config.include('.models')
         config.include('.routes')
 
-        # # Security policies
-        # authn_policy = AuthTktAuthenticationPolicy(
-        #     settings['tutorial.secret'], callback=groupfinder,
-        #     hashalg='sha512')
-        # authz_policy = ACLAuthorizationPolicy()
-        # config.set_authentication_policy(authn_policy)
-        # config.set_authorization_policy(authz_policy)
+        # Security policies
+        authn_policy = AuthTktAuthenticationPolicy(
+            settings['PyrLesson_Finder.secret'], callback=groupfinder,
+            hashalg='sha512')
+        authz_policy = ACLAuthorizationPolicy()
+        config.set_authentication_policy(authn_policy)
+        config.set_authorization_policy(authz_policy)
 
         config.scan()
     return config.make_wsgi_app()
