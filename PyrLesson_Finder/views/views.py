@@ -14,6 +14,7 @@ def signup(request):
     user = User()
     form = SignupForm(request.POST)
     if request.method == 'POST' and form.validate():
+        user.active = 1
         form.populate_obj(user)
         request.dbsession.add(user)
         return HTTPFound(location=request.route_url('login'))
