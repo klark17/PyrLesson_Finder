@@ -1,21 +1,46 @@
 import bcrypt
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
+from .models import User
 
 
-def hash_password(pw):
-    pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
-    return pwhash.decode('utf8')
+class AuthPolicy(AuthTktAuthenticationPolicy):
+    def authenticated_userid(self, request):
+        user = request.user
+        if user is not None:
+            return user.id
 
 
-def check_password(pw, hashed_pw):
-    expected_hash = hashed_pw.encode('utf8')
-    return bcrypt.checkpw(pw.encode('utf8'), expected_hash)
+def get_user(request):
+    user_id = request.unauthenticated_userid
+    if user_id is not None:
+        user = request.dbsession.query(User).get(user_id)
+        return user
 
 
-USERS = {'editor': hash_password('editor'),
-         'viewer': hash_password('viewer')}
-GROUPS = {'editor': ['group:editors']}
+def includeme(config):
+    settings = config.get_settings()
+    authn_policy = AuthPolicy(settings['PyrLesson_Finder.secret'], hashalg='sha512')
+    config.set_authentication_policy(authn_policy)
+    config.set_authorization_policy(ACLAuthorizationPolicy())
+    config.add_request_method(get_user, 'user', reify=True)
 
 
-def groupfinder(userid, request):
-    if userid in USERS:
-        return GROUPS.get(userid, [])
+# def hash_password(pw):
+#     pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
+#     return pwhash.decode('utf8')
+#
+#
+# def check_password(pw, hashed_pw):
+#     expected_hash = hashed_pw.encode('utf8')
+#     return bcrypt.checkpw(pw.encode('utf8'), expected_hash)
+#
+#
+# USERS = {'editor': hash_password('editor'),
+#          'viewer': hash_password('viewer')}
+# GROUPS = {'editor': ['group:editors']}
+#
+#
+# def groupfinder(userid, request):
+#     if userid in USERS:
+#         return GROUPS.get(userid, [])

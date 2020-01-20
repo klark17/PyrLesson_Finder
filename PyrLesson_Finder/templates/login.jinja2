@@ -1,7 +1,7 @@
 {% extends "layout.jinja2" %}
 {% block content %}
     <div class="content-section">
-        <form method="POST" action="{{request.route_url('login',action=action)}}">
+        <form method="POST" action="{{ url }}">
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Log In</legend>
                 <div class="form-group">
