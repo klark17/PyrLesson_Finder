@@ -42,7 +42,7 @@ def login(request):
     return dict(
         message=message,
         url=request.route_url('login'),
-        next_url=next_url,
+        next_url='profile',
         login=login,
         form=form
     )
@@ -67,8 +67,12 @@ def search(request):
     return {'title' : 'Search Lessons'}
 
 
+# TODO: determine what is wrong with this
 @view_config(route_name='profile', renderer='../templates/profile.jinja2')
 def profile(request):
+    if request.matchdict == None:
+        print("it is none")
+    # print(request.matchdict.values())
     fName = request.matchdict['fName']
     lName = request.matchdict['lName']
     # user = request.params.get('user', 'No User')

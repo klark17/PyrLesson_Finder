@@ -43,11 +43,11 @@ class User(Base):
 
 	def set_password(self, pw):
 		pwHash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
-		self.password_hash = pwHash.decode('utf8')
+		self.password = pwHash.decode('utf8')
 
 	def check_password(self, pw):
-		if self.password_hash is not None:
-			expected_hash = self.password_hash.encode('utf8')
+		if self.password is not None:
+			expected_hash = self.password.encode('utf8')
 			return bcrypt.checkpw(pw.encode('utf8'), expected_hash)
 		return False
 

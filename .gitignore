@@ -19,4 +19,6 @@ Data.fs*
 .DS_Store
 coverage
 test
-site.db 
+site.db
+db_commands.txt
+

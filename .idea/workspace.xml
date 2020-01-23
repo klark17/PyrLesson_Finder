@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6308a14-6edc-4a34-982b-c15e4bc0d0a4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/db_commands.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/security.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/security.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/templates/layout.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/templates/layout.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/templates/login.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/templates/login.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/models/db_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/models/db_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PyrLesson_Finder/views/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/PyrLesson_Finder/views/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/development.ini" beforeDir="false" afterPath="$PROJECT_DIR$/development.ini" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/views/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="223">
+              <caret line="69" column="41" selection-start-line="69" selection-start-column="41" selection-end-line="69" selection-end-column="41" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -33,8 +33,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/security.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="47" lean-forward="true" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+            <state relative-caret-position="53">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -43,13 +43,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/__init__.py">
+        <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="272">
+              <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_commands.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="6" column="34" lean-forward="true" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/login.jinja2">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="41" selection-start-line="3" selection-start-column="41" selection-end-line="3" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/routes.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -73,6 +97,7 @@
       <find>html</find>
       <find>url</find>
       <find>check_pas</find>
+      <find>sess</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\Kameryn\Projects\myprojects\venv\PyrLesson_Finder\PyrLesson_Finder</dir>
@@ -90,7 +115,6 @@
         <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/mytemplate.jinja2" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/models/user.py" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/models/models.py" />
-        <option value="$PROJECT_DIR$/PyrLesson_Finder/models/db_models.py" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/models/__init__.py" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/about.jinja2" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/search.jinja2" />
@@ -100,21 +124,25 @@
         <option value="$PROJECT_DIR$/PyrLesson_Finder/app.py" />
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/app.py" />
-        <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2" />
-        <option value="$PROJECT_DIR$/PyrLesson_Finder/routes.py" />
         <option value="$PROJECT_DIR$/development.ini" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/login.jinja2" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/layout.jinja2" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/security.py" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/__init__.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/db_commands.txt" />
+        <option value="$PROJECT_DIR$/PyrLesson_Finder/models/db_models.py" />
+        <option value="$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2" />
+        <option value="$PROJECT_DIR$/PyrLesson_Finder/routes.py" />
         <option value="$PROJECT_DIR$/PyrLesson_Finder/views/views.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="949" />
-    <option name="width" value="980" />
-    <option name="height" value="1031" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="438" />
+    <option name="y" value="-29" />
+    <option name="width" value="981" />
+    <option name="height" value="1032" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -122,6 +150,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -146,11 +175,16 @@
               <item name="PyrLesson_Finder" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="PyrLesson_Finder" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PyrLesson_Finder" type="462c0819:PsiDirectoryNode" />
+              <item name="PyrLesson_Finder" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -253,6 +287,7 @@
       <workItem from="1579380950361" duration="5749000" />
       <workItem from="1579447210756" duration="6277000" />
       <workItem from="1579532860277" duration="2320000" />
+      <workItem from="1579739721854" duration="4752000" />
     </task>
     <task id="LOCAL-00001" summary="cookiecutter python setup">
       <created>1572483991880</created>
@@ -307,12 +342,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64308000" />
+    <option name="totallyTimeSpent" value="69060000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="633" y="0" width="653" height="687" extended-state="0" />
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.45193928" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19190283" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -335,7 +371,7 @@
       <window_info anchor="right" id="Database" order="4" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.5020243" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20566802" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -346,7 +382,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" visible="true" weight="0.16756757" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.16756757" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.3285968" />
@@ -485,20 +521,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/form.py">
+    <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
+        <state relative-caret-position="153">
+          <caret line="9" column="22" lean-forward="true" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
           <folding>
-            <element signature="e#0#194#0" expanded="true" />
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2">
+    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/layout.jinja2">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="36" column="25" lean-forward="true" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/development.ini">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
-          <caret line="11" column="75" selection-start-line="11" selection-start-column="75" selection-end-line="11" selection-end-column="75" />
+          <caret line="15" column="50" selection-start-line="15" selection-start-column="50" selection-end-line="15" selection-end-column="50" />
         </state>
       </provider>
     </entry>
@@ -513,7 +556,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/models/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
+        <state relative-caret-position="170">
           <caret line="10" column="48" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
@@ -521,17 +564,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/routes.py">
+    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="22" lean-forward="true" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+        <state relative-caret-position="272">
+          <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
@@ -540,7 +576,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/views/default.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="272">
           <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
@@ -548,9 +584,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/form.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#194#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/setup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
+        <state relative-caret-position="501">
           <caret line="52" column="6" selection-start-line="52" selection-start-column="6" selection-end-line="52" selection-end-column="6" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
@@ -558,10 +604,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/models/db_models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="45" column="32" selection-start-line="45" selection-start-column="32" selection-end-line="45" selection-end-column="32" />
+        <state relative-caret-position="170">
+          <caret line="50" column="33" selection-start-line="50" selection-start-column="26" selection-end-line="50" selection-end-column="33" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
@@ -571,48 +624,45 @@
     <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/login.jinja2">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
-          <caret line="3" column="43" selection-start-line="3" selection-start-column="43" selection-end-line="3" selection-end-column="43" />
+          <caret line="3" column="41" selection-start-line="3" selection-start-column="41" selection-end-line="3" selection-end-column="41" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/layout.jinja2">
+    <entry file="file://$PROJECT_DIR$/db_commands.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="36" column="25" lean-forward="true" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="102">
+          <caret line="6" column="34" lean-forward="true" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/security.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="47" lean-forward="true" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+        <state relative-caret-position="53">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/development.ini">
+    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/templates/profile.jinja2">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="15" column="50" selection-start-line="15" selection-start-column="50" selection-end-line="15" selection-end-column="50" />
+        <state relative-caret-position="272">
+          <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/routes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/PyrLesson_Finder/views/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="223">
+          <caret line="69" column="41" selection-start-line="69" selection-start-column="41" selection-end-line="69" selection-end-column="41" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
