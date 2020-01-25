@@ -3,6 +3,7 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.response import Response
+from pyramid.session import SignedCookieSessionFactory
 # from .security import groupfinder
 
 
@@ -27,7 +28,9 @@ def main(global_config, **settings):
 
 
 def main(global_config, **settings):
+    factory = SignedCookieSessionFactory('jfagfjslfasdf')
     with Configurator(settings=settings) as config:
+        config.set_session_factory(factory)
         config.include('PyrLesson_Finder.models')
         config.include('pyramid_jinja2')
         config.include('PyrLesson_Finder.routes')

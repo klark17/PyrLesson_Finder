@@ -1,4 +1,4 @@
-{% extends "layout.jinja2" %}
+{% extends "layout2.jinja2" %}
 {% block content %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <div class="content-section">
@@ -8,10 +8,10 @@
                 </div>
                 <div class="col-md-8">
                     <h2 class="list-group-item">Information</h2>
-                    <li class="list-group-item" name="fName">First Name: {{ user.fName }}</li>
-                    <li class="list-group-item" name="lName">Last Name: {{ user.lName }}</li>
-                    <li class="list-group-item" name="lName">Username: {{ user.username }}</li>
-                    <li class="list-group-item" name="email">Email: {{ user.email }}</li>
+                    <li class="list-group-item" name="fName">First Name: {{ first }}</li>
+                    <li class="list-group-item" name="lName">Last Name: {{ last }}</li>
+                    <li class="list-group-item" name="lName">Username: {{ username }}</li>
+                    <li class="list-group-item" name="email">Email: {{ email }}</li>
                 </div>
             </div>
             <div  class="row">
