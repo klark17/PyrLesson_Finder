@@ -3,8 +3,9 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.response import Response
-from pyramid.session import SignedCookieSessionFactory
+from pyramid.session import SignedCookieSessionFactory, JSONSerializer
 # from .security import groupfinder
+from .session import JSONSerializerWithPickleFallback
 
 
 def main(global_config, **settings):
@@ -28,7 +29,11 @@ def main(global_config, **settings):
 
 
 def main(global_config, **settings):
-    factory = SignedCookieSessionFactory('jfagfjslfasdf')
+    serializer = JSONSerializerWithPickleFallback
+    factory = SignedCookieSessionFactory('jfagfjslfasdf',
+                                         secure=True,
+                                         httponly=True,
+                                         serializer=serializer)
     with Configurator(settings=settings) as config:
         config.set_session_factory(factory)
         config.include('PyrLesson_Finder.models')

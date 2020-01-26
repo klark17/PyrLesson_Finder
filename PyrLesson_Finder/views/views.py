@@ -18,7 +18,7 @@ class Views:
         self.request = request
 
     @property
-    def counter(self):
+    def current_user(self):
         session = self.request.session
         if 'counter' not in session:
             session['counter'] = security.get_user(self.request)
@@ -90,9 +90,9 @@ class Views:
     def search(self):
         return {'title' : 'Search Lessons'}
 
-    # TODO: determine what is wrong with this
     @view_config(route_name='profile', renderer='../templates/profile.jinja2')
     def profile(self):
+        print(self.request.session)
         first = self.request.matchdict['first']
         last = self.request.matchdict['last']
         username = self.request.matchdict['username']
