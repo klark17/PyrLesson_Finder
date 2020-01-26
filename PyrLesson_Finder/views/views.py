@@ -45,7 +45,7 @@ class Views:
         # came_from = self.request.params.get('came_from', referrer)
         next_url = self.request.params.get('next', self.request.referrer)
         if not next_url:
-            next_url = self.request.route_url('profile', user='')
+            next_url = self.request.route_url('profile', first='', last='', username='', email='')
         message = ''
         login = ''
         if 'form.submitted' and self.request.params:

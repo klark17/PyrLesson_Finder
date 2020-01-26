@@ -36,10 +36,10 @@ def main(global_config, **settings):
                                          serializer=serializer)
     with Configurator(settings=settings) as config:
         config.set_session_factory(factory)
-        config.include('PyrLesson_Finder.models')
+        config.include('.models')
         config.include('pyramid_jinja2')
-        config.include('PyrLesson_Finder.routes')
-        config.include('PyrLesson_Finder.security')
+        config.include('.routes')
+        config.include('.security')
         config.scan()
         app = config.make_wsgi_app()
         return app
