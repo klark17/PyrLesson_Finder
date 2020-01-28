@@ -7,5 +7,5 @@ def includeme(config):
     config.add_route('search', '/search')
     config.add_route('results', '/search/results')
     config.add_route('register', '/search/results/{id}/register')
-    config.add_route('profile', '/profile/{first}/{last}/{username}/{email}')
-    config.add_route('edit_profile', '/profile/{user}/edit')
+    config.add_route('profile', '/profile/{id:\d+}/')
+    config.add_route('edit_profile', '/profile/{id:\d+}/{action}')

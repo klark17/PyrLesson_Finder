@@ -9,8 +9,7 @@ from .. import security
 # from ..security import check_password
 
 db_err_msg = "Not Found"
-# TODO: fix login, stating error User does not have password_hash
-# TODO: refer to https://docs.pylonsproject.org/projects/pyramid/en/latest/tutorials/wiki2/authentication.html
+# TODO: https://pyramid-blogr.readthedocs.io/en/latest/initial_views.html
 
 @view_defaults(renderer='../templates/about.jinja2')
 class Views:
@@ -104,6 +103,10 @@ class Views:
         # fName = request.matchdict['fName']
         # lName = request.matchdict['lName']
         # user = request.params.get('user', 'No User')
+
+    @view_config(route_name='edit_profile', match_params='action=edit', renderer='')
+    def edit_profile(self):
+        return{}
 
     @forbidden_view_config()
     def forbidden_view(self):
