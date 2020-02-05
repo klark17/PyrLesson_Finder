@@ -20,7 +20,7 @@ def about(request):
         one = query.filter(models.User.username == 'Test1User').first()
     except DBAPIError:
         return Response(db_err_msg, content_type='text/plain', status=500)
-    return {'one': one, 'project': 'PyrLesson_Finder'}
+    return {'title': 'About'}
 
 
 db_err_msg = """\

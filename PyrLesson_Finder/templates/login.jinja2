@@ -1,7 +1,7 @@
-{% extends "layout.jinja2" %}
+{% extends "layout2.jinja2" %}
 {% block content %}
     <div class="content-section">
-        <form method="POST" action="{{ url }}">
+        <form method="POST" action="{{ request.route_url('auth',action='in') }}">
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Log In</legend>
                 <div class="form-group">
@@ -50,32 +50,3 @@
     </div>
 {% endblock content %}
 
-{#{% extends "layout.jinja2" %}#}
-{#{% block content %}#}
-{#    <div class="content-section">#}
-{#        <form method="POST" action="/profile">#}
-{#            <fieldset class="form-group">#}
-{#                <legend class="border-bottom mb-4">Log In</legend>#}
-{#                <div class="form-group">#}
-{#                    <label class="form-control-label" for="username">Username</label>#}
-{#                    <input name="username" class="form-control form-control-lg" id="username" required="" type="text" value=""/>#}
-{#                </div>#}
-{#                <div class="form-group">#}
-{#                    <label class="form-control-label" for="password">Password</label>#}
-{#                    <input name="password" class="form-control form-control-lg" id="password" required="" type="password" value=""/>#}
-{#                </div>#}
-{#            </fieldset>#}
-{#            <div class="form-group">#}
-{#                <input name="submit" class="btn btn-outline-info" id="submit" type="submit" value="Sign in"/>#}
-{#            </div>#}
-{#            <small class="text-muted ml-2">#}
-{#                <a href="#">Forgot Password?</a>#}
-{#            </small>#}
-{#        </form>#}
-{#    </div>#}
-{#    <div class="border-top pt-3">#}
-{#        <small class="text-muted">#}
-{#            Need An Account? <a class="ml-2" href="/signup">Sign Up Now</a>#}
-{#        </small>#}
-{#    </div>#}
-{#{% endblock content %}#}

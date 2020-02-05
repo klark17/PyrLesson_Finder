@@ -3,112 +3,87 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from sqlalchemy.exc import DBAPIError
+from ..services.user_record import UserService
 from ..form import LoginForm, SignupForm
 from ..models import User
 from .. import security
 # from ..security import check_password
 
 db_err_msg = "Not Found"
-# TODO: https://pyramid-blogr.readthedocs.io/en/latest/initial_views.html
 
-@view_defaults(renderer='../templates/about.jinja2')
-class Views:
-    def __init__(self, request):
-        self.request = request
+#
+# @view_config(route_name='about', renderer='../templates/about.jinja2')
+# def about(request):
+#     return {'title': 'Lesson Finder'}
 
-    @property
-    def current_user(self):
-        session = self.request.session
-        if 'counter' not in session:
-            session['counter'] = security.get_user(self.request)
-        return session['counter']
 
-    @view_config(route_name='signup', renderer='../templates/signup.jinja2')
-    def signup(self):
-        user = User()
-        form = SignupForm(self.request.POST)
-        if self.request.method == 'POST' and form.validate():
-            user.active = 1
-            form.populate_obj(user)
-            self.request.dbsession.add(user)
-            return HTTPFound(location=self.request.route_url('login'))
-        return {'title': 'Signup', 'form': form}
+@view_config(route_name='signup', renderer='../templates/signup.jinja2')
+def signup(request):
+    user = User()
+    form = SignupForm(request.POST)
+    if request.method == 'POST' and form.validate():
+        user.active = 1
+        form.populate_obj(user)
+        request.dbsession.add(user)
+        return HTTPFound(location=request.route_url('login'))
+    return {'title': 'Signup', 'form': form}
 
-    @view_config(route_name='login', renderer='../templates/login.jinja2')
-    def login(self):
-        form = LoginForm(self.request.POST)
-        login_url = self.request.route_url('login')
-        referrer = self.request.url
-        # if referrer == login_url:
-        #     referrer = self.request.route_url('profile', user='')
-        # came_from = self.request.params.get('came_from', referrer)
-        next_url = self.request.params.get('next', self.request.referrer)
-        if not next_url:
-            next_url = self.request.route_url('profile', first='', last='', username='', email='')
-        message = ''
-        login = ''
-        if 'form.submitted' and self.request.params:
-            login = self.request.params['username']
-            password = self.request.params['password']
-            user = self.request.dbsession.query(User).filter_by(username=login).first()
-            if user is not None and user.check_password(password):
-                next_url = self.request.route_url('profile',
-                                                  first=user.fName,
-                                                  last=user.lName,
-                                                  username=user.username,
-                                                  email=user.email
-                                                  )
-                headers = remember(self.request, user.id)
-                return HTTPFound(location=next_url, headers=headers)
-            message = 'Failed login'
-        return dict(
-            name='Login',
-            message=message,
-            url=self.request.application_url + '/login',
-            # url=request.route_url('login'),
-            # came_from=came_from,
-            next_url=next_url,
-            login=login,
-            form=form
-        )
-            # if query.filter_by(username=form.username.data).scalar():
-            #     user = query.filter_by(username=form.username.data).first()
-            #     if user and user.password == form.password.data:
-            #         return HTTPFound('/profile?fName=' + user.fName + '&lName=' + user.lName)
-            #     else:
-            #         return Response(db_err_msg, content_type='text/plain', status=500)
-        # return {'title': 'Login', 'form': form}
 
-    @view_config(route_name='logout')
-    def logout(self):
-        headers = forget(self.request)
-        next_url = self.request.route_url('login')
-        return HTTPFound(location=next_url, headers=headers)
+@view_config(route_name='login', renderer='../templates/login.jinja2')
+def login(request):
+    form = LoginForm(request.POST)
+    return {'title': 'Login', 'form': form}
+        # if query.filter_by(username=form.username.data).scalar():
+        #     user = query.filter_by(username=form.username.data).first()
+        #     if user and user.password == form.password.data:
+        #         return HTTPFound('/profile?fName=' + user.fName + '&lName=' + user.lName)
+        #     else:
+        #         return Response(db_err_msg, content_type='text/plain', status=500)
 
-    @view_config(route_name='search', renderer='../templates/search.jinja2')
-    def search(self):
-        return {'title' : 'Search Lessons'}
 
-    @view_config(route_name='profile', renderer='../templates/profile.jinja2')
-    def profile(self):
-        print(self.request.session)
-        first = self.request.matchdict['first']
-        last = self.request.matchdict['last']
-        username = self.request.matchdict['username']
-        email = self.request.matchdict['email']
-        return {'first': first, 'last': last, 'username': username, 'email': email}
-        # if request.matchdict == None:
-        #     print("it is none")
-        # # print(request.matchdict.values())
-        # fName = request.matchdict['fName']
-        # lName = request.matchdict['lName']
-        # user = request.params.get('user', 'No User')
+@view_config(route_name='auth', match_param='action=in', renderer='string',
+             request_method='POST')
+@view_config(route_name='auth', match_param='action=out', renderer='string')
+def sign_in_out(request):
+    username = request.POST.get('username')
+    if username:
+        user = UserService.by_name(username, request=request)
+        if user and user.verify_password(request.POST.get('password')):
+            headers = remember(request, user.name)
+        else:
+            headers = forget(request)
+    else:
+        headers = forget(request)
+    return HTTPFound(location=request.route_url('home'), headers=headers)
 
-    @view_config(route_name='edit_profile', match_params='action=edit', renderer='')
-    def edit_profile(self):
-        return{}
 
-    @forbidden_view_config()
-    def forbidden_view(self):
-        next_url = self.request.route_url('login', _query={'next': self.request.url})
-        return HTTPFound(location=next_url)
+@view_config(route_name='search', renderer='../templates/search.jinja2')
+def search(request):
+    return {'title' : 'Search Lessons'}
+
+
+@view_config(route_name='profile', renderer='../templates/profile.jinja2')
+def profile(request):
+    print(request.session)
+    first = request.matchdict['first']
+    last = request.matchdict['last']
+    username = request.matchdict['username']
+    email = request.matchdict['email']
+    return {'first': first, 'last': last, 'username': username, 'email': email}
+    # if request.matchdict == None:
+    #     print("it is none")
+    # # print(request.matchdict.values())
+    # fName = request.matchdict['fName']
+    # lName = request.matchdict['lName']
+    # user = request.params.get('user', 'No User')
+
+
+@view_config(route_name='edit_profile', renderer='')
+def edit_profile(request):
+    return{}
+
+
+@forbidden_view_config()
+def forbidden_view(request):
+    next_url = request.route_url('login', _query={'next': request.url})
+    return HTTPFound(location=next_url)

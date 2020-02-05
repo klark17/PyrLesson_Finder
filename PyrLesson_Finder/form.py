@@ -1,7 +1,6 @@
 from wtforms import Form, StringField, PasswordField, SubmitField, BooleanField, SelectField, SelectMultipleField, \
     DateTimeField, IntegerField, DateField, TimeField, RadioField, validators
 from wtforms import IntegerField
-from wtforms.widgets import HiddenInput
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from wtforms_components import TimeField, DateField
 from .models import User
