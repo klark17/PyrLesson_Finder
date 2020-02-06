@@ -11,20 +11,20 @@ from .. import security
 
 db_err_msg = "Not Found"
 
-#
-# @view_config(route_name='about', renderer='../templates/about.jinja2')
-# def about(request):
-#     return {'title': 'Lesson Finder'}
-
 
 @view_config(route_name='signup', renderer='../templates/signup.jinja2')
 def signup(request):
-    user = User()
     form = SignupForm(request.POST)
     if request.method == 'POST' and form.validate():
-        user.active = 1
-        form.populate_obj(user)
-        request.dbsession.add(user)
+        new_user = User(active=True,
+                        fName=form.fName.data,
+                        lName=form.lName.data,
+                        email=form.email.data,
+                        birthday=form.birthday.data,
+                        username=form.username.data)
+        new_user.set_password(form.password.data)
+        new_user.active = 1
+        request.dbsession.add(new_user)
         return HTTPFound(location=request.route_url('login'))
     return {'title': 'Signup', 'form': form}
 
@@ -62,14 +62,9 @@ def search(request):
     return {'title' : 'Search Lessons'}
 
 
-@view_config(route_name='profile', renderer='../templates/profile.jinja2')
+@view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')
 def profile(request):
-    print(request.session)
-    first = request.matchdict['first']
-    last = request.matchdict['last']
-    username = request.matchdict['username']
-    email = request.matchdict['email']
-    return {'first': first, 'last': last, 'username': username, 'email': email}
+    return {'title': 'Profile'}
     # if request.matchdict == None:
     #     print("it is none")
     # # print(request.matchdict.values())

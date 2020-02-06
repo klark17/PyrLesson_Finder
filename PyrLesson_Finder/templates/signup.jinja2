@@ -1,7 +1,7 @@
-{% extends "layout.jinja2" %}
+{% extends "layout2.jinja2" %}
 {% block content %}
     <div class="content-section">
-        <form method="POST" action="{{request.route_url('signup',action=action)}}">
+        <form method="POST" action="{{ request.route_url('signup') }}">
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Sign Up!</legend>
 				<div class="form-group">
