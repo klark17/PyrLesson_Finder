@@ -8,10 +8,10 @@
                 </div>
                 <div class="col-md-8">
                     <h2 class="list-group-item">Information</h2>
-                    <li class="list-group-item" name="fName">First Name: {{ request.authenticated_userid }}</li>
-                    <li class="list-group-item" name="lName">Last Name: {{ request.authenticated_userid.lName }}</li>
-                    <li class="list-group-item" name="lName">Username: {{ request.authenticated_userid.username }}</li>
-                    <li class="list-group-item" name="email">Email: {{ request.authenticated_userid.email }}</li>
+                    <li class="list-group-item" name="fName">First Name: {{ user.fName }}</li>
+                    <li class="list-group-item" name="lName">Last Name: {{ user.lName }}</li>
+                    <li class="list-group-item" name="lName">Username: {{ user.username }}</li>
+                    <li class="list-group-item" name="email">Email: {{ user.email }}</li>
                 </div>
             </div>
             <div  class="row">
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="row">
-                {% for lesson in request.authenticated_userid.lessons %}
+                {% for lesson in user.lessons %}
                 <div class="col-md-6">
                     <!--if not registered for classes, show message, else show registered classes-->
                     <article class="media content-section">
@@ -39,7 +39,7 @@
                             <p class="font-weight-light">Start/End Date: {{ lesson.startDate }} to {{ lesson.endDate }}</p>
                             <p class="font-weight-light">Time: {{ lesson.startTime }} - {{ lesson.endTime }}</p>
                             <button class="btn btn-outline-info btn-sm">
-                                <a class="nav-item nav-link" href="{{ url_for('lesson_info', lesson_id=lesson.id) }}">
+                                <a class="nav-item nav-link" href="{{ request.route_url('lesson_info', lesson_id=lesson.id) }}">
                                     View Information/Unregister
                                 </a>
                             </button>
