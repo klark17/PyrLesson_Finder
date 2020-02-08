@@ -4,7 +4,7 @@ from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from sqlalchemy.exc import DBAPIError
 from ..services.user_record import UserService
-from ..form import LoginForm, SignupForm
+from ..form import LoginForm, SignupForm, SearchForm
 from ..models import User
 from .. import security
 # from ..security import check_password
@@ -33,14 +33,9 @@ def signup(request):
 def login(request):
     form = LoginForm(request.POST)
     return {'title': 'Login', 'form': form}
-        # if query.filter_by(username=form.username.data).scalar():
-        #     user = query.filter_by(username=form.username.data).first()
-        #     if user and user.password == form.password.data:
-        #         return HTTPFound('/profile?fName=' + user.fName + '&lName=' + user.lName)
-        #     else:
-        #         return Response(db_err_msg, content_type='text/plain', status=500)
 
 
+# TODO: login says invalid salt
 @view_config(route_name='auth', match_param='action=in', renderer='string',
              request_method='POST')
 @view_config(route_name='auth', match_param='action=out', renderer='string')
@@ -48,18 +43,19 @@ def sign_in_out(request):
     username = request.POST.get('username')
     if username:
         user = UserService.by_name(username, request=request)
-        if user and user.verify_password(request.POST.get('password')):
-            headers = remember(request, user.name)
+        if user and user.check_password(request.POST.get('password')):
+            headers = remember(request, user.username)
         else:
             headers = forget(request)
     else:
         headers = forget(request)
-    return HTTPFound(location=request.route_url('home'), headers=headers)
+    return HTTPFound(location=request.route_url('about'), headers=headers)
 
 
-@view_config(route_name='search', renderer='../templates/search.jinja2')
+@view_config(route_name='search', renderer='../templates/search_lessons.jinja2')
 def search(request):
-    return {'title' : 'Search Lessons'}
+    form = SearchForm(request.POST)
+    return {'title': 'Search Lessons', 'form': form}
 
 
 @view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')

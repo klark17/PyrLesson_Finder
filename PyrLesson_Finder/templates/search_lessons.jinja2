@@ -1,0 +1,94 @@
+{% extends "layout2.jinja2" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Search for a Lesson</legend>
+                <small class="text-muted">
+                    Please enter a start date and a start time.
+                </small>
+                <div class="form-group pt-3">
+                    {{ form.location.label(class="form-control-label") }}
+                    {% if form.location.errors %}
+                        {{ form.location(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.location.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.location(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.organization.label(class="form-control-label") }}
+                    {% if form.organization.errors %}
+                        {{ form.organization(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.organization.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.organization(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.startDate.label(class="form-control-label") }}
+                    {% if form.startDate.errors %}
+                        {{ form.startDate(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.startDate.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.startDate(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.startTime.label(class="form-control-label") }}
+                    {% if form.startTime.errors %}
+                        {{ form.startTime(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.startTime.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.startTime(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group pt-3">
+                    {{ form.day.label(class="form-control-label") }}
+                    {% if form.day.errors %}
+                        {{ form.day(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.day.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.day(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.level.label(class="form-control-label") }}
+                    {% if form.level.errors %}
+                        {{ form.level(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.level.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.level(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

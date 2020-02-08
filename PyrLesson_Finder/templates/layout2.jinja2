@@ -32,8 +32,8 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if request.authenticated_userid %}
-                <a class="nav-item nav-link" href="{{ request.route_url('sign', action='out') }}">Logout</a>
-                <a class="nav-item nav-link" href="{{ request.route_url('profile') }}">Profile</a>
+                <a class="nav-item nav-link" href="{{ request.route_url('auth', action='out') }}">Logout</a>
+                <a class="nav-item nav-link" href="{{ request.route_url('profile', id=request.authenticated_userid) }}">Profile</a>
                {% else  %}
                 <a class="nav-item nav-link" href="{{ request.route_url('login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ request.route_url('signup') }}">Sign Up</a>

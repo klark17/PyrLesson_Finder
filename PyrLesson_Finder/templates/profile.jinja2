@@ -8,10 +8,10 @@
                 </div>
                 <div class="col-md-8">
                     <h2 class="list-group-item">Information</h2>
-                    <li class="list-group-item" name="fName">First Name: {{ first }}</li>
-                    <li class="list-group-item" name="lName">Last Name: {{ last }}</li>
-                    <li class="list-group-item" name="lName">Username: {{ username }}</li>
-                    <li class="list-group-item" name="email">Email: {{ email }}</li>
+                    <li class="list-group-item" name="fName">First Name: {{ request.authenticated_userid }}</li>
+                    <li class="list-group-item" name="lName">Last Name: {{ request.authenticated_userid.lName }}</li>
+                    <li class="list-group-item" name="lName">Username: {{ request.authenticated_userid.username }}</li>
+                    <li class="list-group-item" name="email">Email: {{ request.authenticated_userid.email }}</li>
                 </div>
             </div>
             <div  class="row">
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="row">
-                {% for lesson in lessons %}
+                {% for lesson in request.authenticated_userid.lessons %}
                 <div class="col-md-6">
                     <!--if not registered for classes, show message, else show registered classes-->
                     <article class="media content-section">
