@@ -84,6 +84,11 @@ def lesson_info(request):
     return{}
 
 
+@view_config(route_name='dep_lesson_info', renderer='../templates/dep_lesson_info.jinja2', permission='view')
+def dep_lesson_info(request):
+    return{}
+
+
 @view_config(route_name='edit_profile', renderer='')
 def edit_profile(request):
     return{}
