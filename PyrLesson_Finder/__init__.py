@@ -11,7 +11,7 @@ def main(global_config, **settings):
                                          secure=True,
                                          httponly=True,
                                          serializer=serializer)
-    authentication_policy = AuthTktAuthenticationPolicy('somesecret')
+    authentication_policy = AuthTktAuthenticationPolicy('PyrLesson_Finder.secret')
     authorization_policy = ACLAuthorizationPolicy()
     with Configurator(settings=settings,
                       authentication_policy=authentication_policy,

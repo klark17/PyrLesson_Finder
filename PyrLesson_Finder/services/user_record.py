@@ -16,7 +16,7 @@ class UserService(object):
         return query.get(_id)
 
     @classmethod
-    def by_name(cls, username, request):
+    def by_username(cls, username, request):
         return request.dbsession.query(User).filter(User.username == username).first()
 
     @classmethod

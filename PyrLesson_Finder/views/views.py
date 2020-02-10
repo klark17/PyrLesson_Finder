@@ -1,5 +1,5 @@
 from pyramid.response import Response
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from sqlalchemy.exc import DBAPIError
@@ -15,11 +15,12 @@ db_err_msg = "Not Found"
 # TODO: change this for security purposes
 #  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
 def get_user(request, user):
-    current_user = request.dbsession.query(User).filter(User.username==user).first()
-    if current_user:
+    print(user)
+    if user:
+        current_user = request.dbsession.query(User).get(user)
         return current_user
     else:
-        return None
+        raise HTTPForbidden
 
 
 @view_config(route_name='signup', renderer='../templates/signup.jinja2')
@@ -51,9 +52,10 @@ def login(request):
 def sign_in_out(request):
     username = request.POST.get('username')
     if username:
-        user = UserService.by_name(username, request=request)
+        user = UserService.by_username(username, request=request)
+        print(user)
         if user and user.check_password(request.POST.get('password')):
-            headers = remember(request, user.username)
+            headers = remember(request, user.id)
         else:
             headers = forget(request)
     else:
@@ -71,12 +73,6 @@ def search(request):
 def profile(request):
     user = get_user(request, request.authenticated_userid)
     return {'title': 'Profile', 'user': user}
-    # if request.matchdict == None:
-    #     print("it is none")
-    # # print(request.matchdict.values())
-    # fName = request.matchdict['fName']
-    # lName = request.matchdict['lName']
-    # user = request.params.get('user', 'No User')
 
 
 @view_config(route_name='lesson_info', renderer='../templates/lesson_info.jinja2', permission='view')
