@@ -21,4 +21,4 @@ coverage
 test
 site.db
 db_commands.txt
-
+PyrLesson_Finder.sqlite

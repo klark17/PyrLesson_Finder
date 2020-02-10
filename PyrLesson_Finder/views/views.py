@@ -4,8 +4,8 @@ from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from sqlalchemy.exc import DBAPIError
 from ..services.user_record import UserService
-from ..form import LoginForm, SignupForm, SearchForm
-from ..models import User
+from ..form import LoginForm, SignupForm, SearchForm, levels
+from ..models import User, Lesson
 from .. import security
 # from ..security import check_password
 
@@ -15,7 +15,6 @@ db_err_msg = "Not Found"
 # TODO: change this for security purposes
 #  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
 def get_user(request, user):
-    print(user)
     if user:
         current_user = request.dbsession.query(User).get(user)
         return current_user
@@ -66,7 +65,27 @@ def sign_in_out(request):
 @view_config(route_name='search', renderer='../templates/search_lessons.jinja2')
 def search(request):
     form = SearchForm(request.POST)
+    level_choice = dict(levels).get(form.level.data)
+    # TODO: fix this to find lessons based on search parameters
+    if request.method == 'POST' and form.validate():
+        results = Lesson.query.filter(or_(Lesson.location == form.location.data,
+                                          Lesson.organizationId == form.organization.data,
+                                          Lesson.startDate == form.startDate.data,
+                                          Lesson.startTime == form.startTime.data,
+                                          Lesson.day == form.day.data,
+                                          Lesson.level == level_choice))
+        if len(results.all()) == 0:
+            raise HTTPForbidden
+        else:
+            # TODO: have this return the correct view with results
+            return HTTPFound(location=request.route_url('results', results=results))
     return {'title': 'Search Lessons', 'form': form}
+
+
+@view_config(route_name='results', renderer='../templates/search_results.jinja2')
+def results(request):
+    return {'title': 'Results', results: results}
+
 
 
 @view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')
@@ -77,17 +96,17 @@ def profile(request):
 
 @view_config(route_name='lesson_info', renderer='../templates/lesson_info.jinja2', permission='view')
 def lesson_info(request):
-    return{}
+    return {'title': 'Information'}
 
 
 @view_config(route_name='dep_lesson_info', renderer='../templates/dep_lesson_info.jinja2', permission='view')
 def dep_lesson_info(request):
-    return{}
+    return {'title': 'Information'}
 
 
 @view_config(route_name='edit_profile', renderer='')
 def edit_profile(request):
-    return{}
+    return {'title': 'Edit Information'}
 
 
 @forbidden_view_config()
