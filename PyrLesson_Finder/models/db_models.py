@@ -22,7 +22,9 @@ hosting = Table('hosting',
 				Column('lessonId', Integer, ForeignKey('lesson.id')),
 				)
 
-
+# TODO: DB Browser for SQLite
+# TODO: email Lisa to meet
+# TODO: make sure you look into how sessions are handled in both frameworks
 class User(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)

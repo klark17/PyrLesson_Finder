@@ -55,7 +55,15 @@
 	<main role='main' class='container'>
 		<div class="row">
 			<div class="col-md-8">
-{#			  {% with messages = get_flashed_messages(with_categories=true) %}#}
+            {% if request.session.peek_flash() %}
+{#                {% flash = request.session.pop_flash() %}#}
+                {% for message in request.session.pop_flash() %}
+                    <div class="alert alert-{{ message }}">#}
+					  {{ message }}
+					</div>
+                {% endfor %}
+            {% endif %}
+{#			  {% with messages = request.session.flash('Logged In!') %}#}
 {#				{% if messages %}#}
 {#				  {% for category, message in messages %}#}
 {#					<div class="alert alert-{{ category }}">#}
