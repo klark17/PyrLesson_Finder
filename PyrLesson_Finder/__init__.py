@@ -18,6 +18,7 @@ def main(global_config, **settings):
                       authorization_policy=authorization_policy) as config:
         config.set_session_factory(factory)
         config.include('.models')
+        config.include('pyramid_debugtoolbar')
         config.include('pyramid_jinja2')
         config.include('.routes')
         config.scan()

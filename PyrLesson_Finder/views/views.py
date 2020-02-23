@@ -2,8 +2,8 @@ from pyramid.response import Response
 from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
-from sqlalchemy import or_
 from ..services.user_record import UserService
+from ..services.lesson_record import LessonService
 from ..form import LoginForm, SignupForm, SearchForm, levels
 from ..models import User, Lesson
 from .. import security
@@ -69,28 +69,31 @@ def sign_in_out(request):
 @view_config(route_name='search', renderer='../templates/search_lessons.jinja2')
 def search(request):
     form = SearchForm(request.POST)
-    level_choice = dict(levels).get(form.level.data)
-    # TODO: fix this to find lessons based on search parameters
-    if request.method == 'POST' and form.validate():
-        results = request.dbsession.query(Lesson).filter(or_(Lesson.location == form.location.data,
-                                                             Lesson.organizationId == form.organization.data,
-                                                             Lesson.startDate == form.startDate.data,
-                                                             Lesson.startTime == form.startTime.data,
-                                                             Lesson.day == form.day.data,
-                                                             Lesson.level == level_choice))
-        if len(results.all()) == 0:
-            request.session.flash('Your search did not yield any results. Please try again.')
-        else:
-            print(results)
-            # TODO: have this return the correct view with results
-            # TODO: pass results properly
-            return HTTPFound(location=request.route_url('results', results=results))
+    # if request.method == 'POST' and form.validate():
+    #     level_choice = dict(levels).get(request.POST.get('level'))
+    #     lessons = request.dbsession.query(Lesson).filter(or_(Lesson.location == request.POST.get('location'),
+    #                                                          Lesson.organizationId == request.POST.get('organizationId'),
+    #                                                          Lesson.startDate == request.POST.get('startDate'),
+    #                                                          Lesson.startTime == request.POST.get('startTime'),
+    #                                                          Lesson.day == request.POST.get('day'),
+    #                                                          Lesson.level == level_choice)).all()
+    #     if len(lessons) == 0:
+    #         # request.session.flash('Your search did not yield any results. Please try again.')
+    #         return {'title': 'Search Lessons', 'form': form}
+    #     else:
+    #         # TODO: pass as list not string
+    #         return HTTPFound(location=request.route_url('results', _query={'results': lessons}))
     return {'title': 'Search Lessons', 'form': form}
 
 
 @view_config(route_name='results', renderer='../templates/search_results.jinja2')
 def results(request):
-    return {'title': 'Results', results: results}
+    lessons = LessonService.get_lessons(request)
+    if len(lessons) == 0:
+        # request.session.flash('Your search did not yield any results. Please try again.')
+        return HTTPFound(location=request.route_url('search'))
+    else:
+        return {'title': 'Results', 'results': lessons}
 
 
 @view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')
@@ -112,6 +115,16 @@ def dep_lesson_info(request):
 @view_config(route_name='edit_profile', renderer='')
 def edit_profile(request):
     return {'title': 'Edit Information'}
+
+
+@view_config(route_name='register', renderer='', permission='view')
+def register(request):
+    return {'title': 'Register'}
+
+
+@view_config(route_name='register_yourself', renderer='', permission='view')
+def register_yourself(request):
+    return {'title': 'Register Yourself'}
 
 
 @forbidden_view_config()

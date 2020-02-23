@@ -1,7 +1,10 @@
-from PyrLesson_Finder.models import User
+from PyrLesson_Finder.models import User, Lesson
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 db = create_engine('sqlite:///site.db')
 Session = sessionmaker(bind=db)
 session = Session()
 user = session.query(User).first()
+
+
+try passing lessons to a different function and formatting that way
