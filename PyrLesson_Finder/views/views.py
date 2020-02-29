@@ -112,7 +112,6 @@ def register_yourself(request):
     lesson = LessonService.get_by_id(request)
     user = get_user(request, request.authenticated_userid)
     user.lessons.append(lesson)
-    request.session.flash('Success!')
     return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
