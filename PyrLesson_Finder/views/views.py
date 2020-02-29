@@ -6,6 +6,7 @@ from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
 from ..form import LoginForm, SignupForm, SearchForm, levels
 from ..models import User, Lesson
+import pdb
 from .. import security
 # from ..security import check_password
 
@@ -54,35 +55,18 @@ def sign_in_out(request):
     username = request.POST.get('username')
     if username:
         user = UserService.by_username(username, request=request)
-        print(user)
         if user and user.check_password(request.POST.get('password')):
             headers = remember(request, user.id)
         else:
             headers = forget(request)
     else:
         headers = forget(request)
-    # TODO: get flash message working
-    # request.session.flash('Welcome!')
     return HTTPFound(location=request.route_url('about'), headers=headers)
 
 
 @view_config(route_name='search', renderer='../templates/search_lessons.jinja2')
 def search(request):
     form = SearchForm(request.POST)
-    # if request.method == 'POST' and form.validate():
-    #     level_choice = dict(levels).get(request.POST.get('level'))
-    #     lessons = request.dbsession.query(Lesson).filter(or_(Lesson.location == request.POST.get('location'),
-    #                                                          Lesson.organizationId == request.POST.get('organizationId'),
-    #                                                          Lesson.startDate == request.POST.get('startDate'),
-    #                                                          Lesson.startTime == request.POST.get('startTime'),
-    #                                                          Lesson.day == request.POST.get('day'),
-    #                                                          Lesson.level == level_choice)).all()
-    #     if len(lessons) == 0:
-    #         # request.session.flash('Your search did not yield any results. Please try again.')
-    #         return {'title': 'Search Lessons', 'form': form}
-    #     else:
-    #         # TODO: pass as list not string
-    #         return HTTPFound(location=request.route_url('results', _query={'results': lessons}))
     return {'title': 'Search Lessons', 'form': form}
 
 
@@ -90,7 +74,6 @@ def search(request):
 def results(request):
     lessons = LessonService.get_lessons(request)
     if len(lessons) == 0:
-        # request.session.flash('Your search did not yield any results. Please try again.')
         return HTTPFound(location=request.route_url('search'))
     else:
         return {'title': 'Results', 'results': lessons}
@@ -104,7 +87,9 @@ def profile(request):
 
 @view_config(route_name='lesson_info', renderer='../templates/lesson_info.jinja2', permission='view')
 def lesson_info(request):
-    return {'title': 'Information'}
+    lesson = LessonService.get_by_id(request)
+    print(lesson.name)
+    return {'title': 'Information', 'lesson': lesson}
 
 
 @view_config(route_name='dep_lesson_info', renderer='../templates/dep_lesson_info.jinja2', permission='view')
@@ -122,9 +107,13 @@ def register(request):
     return {'title': 'Register'}
 
 
-@view_config(route_name='register_yourself', renderer='', permission='view')
+@view_config(route_name='register_yourself', renderer='string', permission='view')
 def register_yourself(request):
-    return {'title': 'Register Yourself'}
+    lesson = LessonService.get_by_id(request)
+    user = get_user(request, request.authenticated_userid)
+    user.lessons.append(lesson)
+    request.session.flash('Success!')
+    return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
 @forbidden_view_config()

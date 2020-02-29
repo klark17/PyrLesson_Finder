@@ -1,6 +1,7 @@
 from pyramid.session import JSONSerializer
 from pyramid.session import PickleSerializer
 
+
 class JSONSerializerWithPickleFallback(object):
     def __init__(self):
         self.json = JSONSerializer()

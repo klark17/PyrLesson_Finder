@@ -15,8 +15,8 @@ def main(global_config, **settings):
     authorization_policy = ACLAuthorizationPolicy()
     with Configurator(settings=settings,
                       authentication_policy=authentication_policy,
-                      authorization_policy=authorization_policy) as config:
-        config.set_session_factory(factory)
+                      authorization_policy=authorization_policy,
+                      session_factory=factory) as config:
         config.include('.models')
         config.include('pyramid_debugtoolbar')
         config.include('pyramid_jinja2')

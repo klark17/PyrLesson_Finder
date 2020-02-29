@@ -21,6 +21,13 @@ class LessonService(object):
 
 
     @classmethod
+    def get_by_id(cls, request):
+        lesson_id = int(request.matchdict['lesson_id'])
+        lesson = request.dbsession.query(Lesson).get(lesson_id)
+        return lesson
+
+
+    @classmethod
     def get_paginator(cls, request, page=1):
         query = request.dbsession.query(Lesson)
         query = query.order_by(sa.desc(Lesson.created))
