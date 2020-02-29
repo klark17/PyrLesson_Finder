@@ -115,6 +115,19 @@ def register_yourself(request):
     return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
+@view_config(route_name='unregister_self', renderer='string', permission='view')
+def unregister_user(request):
+    lesson = LessonService.get_by_id(request)
+    current_user = get_user(request, request.authenticated_userid)
+    for user in lesson.selfParticipant:
+        if current_user.id == user.id:
+            lesson.selfParticipant.remove(user)
+            break
+        else:
+            continue
+    return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+
+
 @forbidden_view_config()
 def forbidden_view(request):
     next_url = request.route_url('login', _query={'next': request.url})
