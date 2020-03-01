@@ -1,5 +1,5 @@
 import sqlalchemy as sa
-from paginate_sqlalchemy import SqlalchemyOrmPage #<- provides pagination
+# from paginate_sqlalchemy import SqlalchemyOrmPage #<- provides pagination
 from ..models.db_models import Lesson
 from ..form import levels
 from sqlalchemy import or_

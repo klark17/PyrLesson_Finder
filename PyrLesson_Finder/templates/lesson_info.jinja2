@@ -28,12 +28,9 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">
-                        <a href="{{ request.route_url('unregister_user', lesson_id=lesson.id) }}">
-                            Delete
-                        </a>
-                    </button>
+                    <form action="{{ request.route_url('unregister_self', lesson_id=lesson.id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                    </form>
                 </div>
             </div>
         </div>

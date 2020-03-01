@@ -88,7 +88,6 @@ def profile(request):
 @view_config(route_name='lesson_info', renderer='../templates/lesson_info.jinja2', permission='view')
 def lesson_info(request):
     lesson = LessonService.get_by_id(request)
-    print(lesson.name)
     return {'title': 'Information', 'lesson': lesson}
 
 
@@ -116,7 +115,7 @@ def register_yourself(request):
 
 
 @view_config(route_name='unregister_self', renderer='string', permission='view')
-def unregister_user(request):
+def unregister_self(request):
     lesson = LessonService.get_by_id(request)
     current_user = get_user(request, request.authenticated_userid)
     for user in lesson.selfParticipant:
