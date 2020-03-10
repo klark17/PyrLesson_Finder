@@ -4,8 +4,8 @@ from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
-from ..form import LoginForm, SignupForm, SearchForm, levels
-from ..models import User, Lesson
+from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, levels
+from ..models import User, Participant
 import pdb
 from .. import security
 # from ..security import check_password
@@ -93,7 +93,8 @@ def lesson_info(request):
 
 @view_config(route_name='dep_lesson_info', renderer='../templates/dep_lesson_info.jinja2', permission='view')
 def dep_lesson_info(request):
-    return {'title': 'Information'}
+    lesson = LessonService.get_by_id(request)
+    return {'title': 'Information', 'lesson': lesson, 'dependent': request.matchdict['dep_id']}
 
 
 @view_config(route_name='edit_profile', renderer='')
@@ -101,9 +102,43 @@ def edit_profile(request):
     return {'title': 'Edit Information'}
 
 
-@view_config(route_name='register', renderer='', permission='view')
+@view_config(route_name='register', renderer='../templates/register.jinja2', permission='view')
 def register(request):
-    return {'title': 'Register'}
+    form = RegistrationForm(request.POST)
+    lesson = LessonService.get_by_id(request)
+    return {'title': 'Register', 'form': form, 'lesson': lesson}
+
+
+# TODO: look into the commit() method
+@view_config(route_name='register_dep', renderer='string', permission='view')
+def register_dep(request):
+    lesson = LessonService.get_by_id(request)
+    user = get_user(request, request.authenticated_userid)
+    dependents = user.dependents
+    print(dependents)
+    dependent = Participant(fName=request.POST.get('fName'), lName=request.POST.get('lName'),
+                            contactNum=request.POST.get('contactNum'),
+                            contactEmail=request.POST.get('contactEmail'))
+    if not dependents:
+        user.dependents.append(dependent)
+        dependent.lessons.append(lesson)
+        request.dbsession.add(dependent)
+        return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+    elif dependents:
+        exists = False
+        for dep in dependents:
+            if dep.fName == dependent.fName and dep.lName == dependent.lName:
+                exists = True
+                existingDep = dep
+                break
+        if exists == True:
+            existingDep.lessons.append(lesson)
+            return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+        else:
+            user.dependents.append(dependent)
+            dependent.lessons.append(lesson)
+            request.dbsession.add(dependent)
+            return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
 @view_config(route_name='register_yourself', renderer='string', permission='view')
@@ -118,13 +153,13 @@ def register_yourself(request):
 def unregister_self(request):
     lesson = LessonService.get_by_id(request)
     current_user = get_user(request, request.authenticated_userid)
-    for user in lesson.selfParticipant:
+    for user in lesson.selfParticipant.all():
         if current_user.id == user.id:
             lesson.selfParticipant.remove(user)
-            break
+            return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
         else:
             continue
-    return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+    return HTTPFound(location=request.route_url('lesson_info', id=int(request.matchdict['lesson_id'])))
 
 
 @forbidden_view_config()

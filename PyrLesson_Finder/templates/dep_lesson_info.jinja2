@@ -1,4 +1,4 @@
-{% extends "layout2.html" %}
+{% extends "layout2.jinja2" %}
 {% block content %}
     <article class="media content-section">
         <div class="media-body">
@@ -12,7 +12,7 @@
                 It will be from {{ lesson.startTime }} to {{ lesson.endTime }}</p>
                 <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Unregister</button>
                 <button type="button" class="btn btn-info btn-sm m-1">
-                    <a class="nav-item nav-link" href="{{ request.route_url('edit_registration', dep_id=dependent.id) }}">
+                    <a class="nav-item nav-link" href="{{ request.route_url('edit_registration', dep_id=dependent) }}">
                         Edit Registration Information
                     </a>
                 </button>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <form action="{{ request.route_url('unregister_dep', lesson_id=lesson.id, dep_id=dependent.id) }}" method="POST">
+                    <form action="{{ request.route_url('unregister_dep', lesson_id=lesson.id, dep_id=dependent) }}" method="POST">
                         <input class="btn btn-danger" type="submit" value="Delete">
                     </form>
                 </div>

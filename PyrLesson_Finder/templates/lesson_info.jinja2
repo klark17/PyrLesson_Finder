@@ -28,9 +28,12 @@
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <form action="{{ request.route_url('unregister_self', lesson_id=lesson.id) }}" method="POST">
-                        <input class="btn btn-danger" type="submit" value="Delete">
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Delete</button>
+                    <button class="btn btn-danger btn-sm m-1">
+                        <a href="{{ request.route_url('unregister_self', lesson_id=lesson.id) }}">
+                            Delete
+                        </a>
+                    </button>
                 </div>
             </div>
         </div>

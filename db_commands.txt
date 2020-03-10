@@ -5,6 +5,7 @@ db = create_engine('sqlite:///site.db')
 Session = sessionmaker(bind=db)
 session = Session()
 user = session.query(User).first()
+lesson = session.query(Lesson).first()
 
 
 try passing lessons to a different function and formatting that way
