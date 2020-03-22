@@ -1,5 +1,5 @@
 import sqlalchemy as sa
-from paginate_sqlalchemy import SqlalchemyOrmPage #<- provides pagination
+# from paginate_sqlalchemy import SqlalchemyOrmPage #<- provides pagination
 from ..models.db_models import Participant
 from ..form import levels
 from sqlalchemy import or_
@@ -26,5 +26,5 @@ class LessonService(object):
             query_params['page'] = link_page
             return request.current_route_url(_query=query_params)
 
-        return SqlalchemyOrmPage(query, page, items_per_page=5,
-                                 url_maker=url_maker)
+        # return SqlalchemyOrmPage(query, page, items_per_page=5,
+        #                          url_maker=url_maker)
