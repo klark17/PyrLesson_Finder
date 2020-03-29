@@ -1,7 +1,7 @@
 {% extends "layout2.jinja2" %}
 {% block content %}
     <div class="content-section">
-        <form method="POST" action="">
+        <form method="POST" action="{{ request.route_url('edit_profile', id=user.id, request=request) }}">
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Edit Information</legend>
                 <div class="form-group">
@@ -22,7 +22,7 @@
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
             <button class="btn btn-outline-info btn-sm">
-                <a class="nav-item nav-link" href="{{ url_for('profile') }}">
+                <a class="nav-item nav-link" href="{{ request.route_url('profile', id=user.id) }}">
                     Cancel
                 </a>
             </button>

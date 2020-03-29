@@ -4,7 +4,7 @@ from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
-from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, levels
+from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, levels
 from ..models import User, Participant
 import pdb
 from .. import security
@@ -97,9 +97,14 @@ def dep_lesson_info(request):
     return {'title': 'Information', 'lesson': lesson, 'dependent': request.matchdict['dep_id']}
 
 
-@view_config(route_name='edit_profile', renderer='')
+@view_config(route_name='edit_profile', renderer='../templates/edit_username.jinja2', permission='view')
 def edit_profile(request):
-    return {'title': 'Edit Information'}
+    form = UpdateUsernameForm(request.POST)
+    user = get_user(request, request.authenticated_userid)
+    if request.method == 'POST' and form.validate():
+        user.username = form.username.data
+        return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+    return {'title': 'Edit Information', 'user': user, 'form': form}
 
 
 @view_config(route_name='register', renderer='../templates/register.jinja2', permission='view')

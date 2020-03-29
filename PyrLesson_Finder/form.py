@@ -4,6 +4,7 @@ from wtforms import IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from wtforms_components import TimeField, DateField
 from .models import User
+from .services.user_record import UserService
 
 
 levels = [('None', 'None'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6')]
@@ -13,6 +14,7 @@ days = [('None', 'None'), ('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
 
 
 class SignupForm(Form):
+    active = True
     fName = StringField('First Name', validators=[DataRequired()])
     lName = StringField('Last Name', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -21,18 +23,6 @@ class SignupForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
-
-    # def validate_username(self, username, request):
-    #     query = request.dbsession.query(User)
-    #     user = query.filter_by(username=username.data).first()
-    #     if user:
-    #         raise ValidationError('Username is taken. Choose another.')
-    #
-    # def validate_email(self, email, request):
-    #     query = request.dbsession.query(User)
-    #     user = query.filter_by(email=email.data).first()
-    #     if user:
-    #         raise ValidationError('Email is taken. Choose another.')
 
 
 class LoginForm(Form):
@@ -80,8 +70,8 @@ class UpdateUsernameForm(Form):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     submit = SubmitField('Submit Changes')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
+    def validate_username(self, username, request):
+        user = UserService.by_username(username, request)
         if user:
             raise ValidationError('Username is taken. Choose another.')
 
