@@ -4,7 +4,7 @@ from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
-from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, levels
+from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, EditRegistrationForm, levels
 from ..models import User, Participant
 import pdb
 from .. import security
@@ -12,7 +12,7 @@ from .. import security
 
 db_err_msg = "Not Found"
 
-
+# TODO: add edit_registration for dependents
 # TODO: change this for security purposes
 #  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
 def get_user(request, user):

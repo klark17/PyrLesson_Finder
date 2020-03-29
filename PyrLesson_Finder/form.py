@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from wtforms_components import TimeField, DateField
 from .models import User
 from .services.user_record import UserService
+import pdb
 
 
 levels = [('None', 'None'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6')]
@@ -70,10 +71,12 @@ class UpdateUsernameForm(Form):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     submit = SubmitField('Submit Changes')
 
-    def validate_username(self, username, request):
-        user = UserService.by_username(username, request)
-        if user:
-            raise ValidationError('Username is taken. Choose another.')
+    # TODO: figure out why this doesn't work
+    # def validate_username(self, username):
+    #     pdb.set_trace()
+    #     user = UserService.by_username(username, request)
+    #     if user:
+    #         raise ValidationError('Username is taken. Choose another.')
 
 
 class EditRegistrationForm(Form):
