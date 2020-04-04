@@ -6,7 +6,7 @@ from sqlalchemy import or_
 
 
 # use this to get search results instead
-class LessonService(object):
+class DependentService(object):
 
     @classmethod
     def get_by_id(cls, request):

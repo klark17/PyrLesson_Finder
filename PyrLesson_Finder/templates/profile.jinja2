@@ -3,9 +3,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <div class="content-section">
             <div class="row">
-                <div class="col-md-4">
-                    <h2>Profile Picture</h2>
+                <div class="col-md-12">
+                    <h2>Profile</h2>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-8">
                     <h2 class="list-group-item">Information</h2>
                     <li class="list-group-item" name="fName">First Name: {{ user.fName }}</li>
@@ -13,11 +15,9 @@
                     <li class="list-group-item" name="lName">Username: {{ user.username }}</li>
                     <li class="list-group-item" name="email">Email: {{ user.email }}</li>
                 </div>
-            </div>
-            <div  class="row">
                 <div class="col-md-4">
-                    <button class="btn btn-outline-info btn-sm">
-                        <a class="nav-item nav-link" href="{{ request.route_url('edit_profile', id=user.id) }}">
+                    <button class="btn btn-info btn-sm">
+                        <a class="edit" href="{{ request.route_url('edit_profile', id=user.id) }}">
                             Change Username
                         </a>
                     </button>
@@ -26,7 +26,7 @@
             <!--TODO: Change this to look better-->
             <div class="row">
                 <div class="col-md-12">
-                    <h3>Your classes.</h3>
+                    <h3>Your Lessons</h3>
                 </div>
             </div>
             <div class="row">
@@ -38,8 +38,8 @@
                             <h5 class="article-content">{{ lesson.name }}</h5>
                             <p class="font-weight-light">Start/End Date: {{ lesson.startDate }} to {{ lesson.endDate }}</p>
                             <p class="font-weight-light">Time: {{ lesson.startTime }} - {{ lesson.endTime }}</p>
-                            <button class="btn btn-outline-info btn-sm">
-                                <a class="nav-item nav-link" href="{{ request.route_url('lesson_info', lesson_id=lesson.id) }}">
+                            <button class="btn btn-info btn-sm">
+                                <a class="edit" href="{{ request.route_url('lesson_info', lesson_id=lesson.id) }}">
                                     View Information/Unregister
                                 </a>
                             </button>
@@ -49,12 +49,17 @@
                 {% endfor %}
             </div>
             <div class="row">
-                <h3>Dependent's Lessons.</h3>
+                <div class="col-md-12">
+                    <h3>Dependent's Lessons</h3>
+                </div>
             </div>
             <div class="row">
                 {% for dependent in user.dependents %}
                     <div class="col-md-12">
-                        <h5>{{ dependent.fName }} {{ dependent.lName }} is registered for:</h5>
+                        <h4>Name: {{ dependent.fName }} {{ dependent.lName }}</h4>
+                        <p>Contact Email: {{ dependent.contactEmail }}</p>
+                        <p>Contact Number: {{ dependent.contactNum }}</p>
+                        <h4>Lessons:</h4>
                     </div>
                     {% for lesson in dependent.lessons %}
                     <div class="col-md-6">
@@ -64,8 +69,8 @@
                                 <h5 class="article-content">{{ lesson.name }}</h5>
                                 <p class="font-weight-light">Start/End Date: {{ lesson.startDate }} to {{ lesson.endDate }}</p>
                                 <p class="font-weight-light">Time: {{ lesson.startTime }} - {{ lesson.endTime }}</p>
-                                <button class="btn btn-outline-info btn-sm">
-                                    <a class="nav-item nav-link" href="{{ request.route_url('dep_lesson_info', lesson_id=lesson.id, dep_id=dependent.id) }}">
+                                <button class="btn btn-info btn-sm">
+                                    <a class="edit" href="{{ request.route_url('dep_lesson_info', lesson_id=lesson.id, dep_id=dependent.id) }}">
                                         View Information/Unregister
                                     </a>
                                 </button>
@@ -77,7 +82,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <button class="btn btn-outline-info">
+                    <button class="btn btn-info">
                         <a class="nav-item nav-link" href="/search">
                             Search/Register
                         </a>

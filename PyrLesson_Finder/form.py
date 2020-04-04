@@ -5,7 +5,6 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from wtforms_components import TimeField, DateField
 from .models import User
 from .services.user_record import UserService
-import pdb
 
 
 levels = [('None', 'None'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6')]

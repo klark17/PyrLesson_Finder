@@ -4,6 +4,7 @@ from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
+from ..services.dependent_record import DependentService
 from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, EditRegistrationForm, levels
 from ..models import User, Participant
 import pdb
@@ -106,6 +107,24 @@ def edit_profile(request):
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
     return {'title': 'Edit Information', 'user': user, 'form': form}
 
+
+@view_config(route_name='edit_registration', renderer='../templates/edit_registration.jinja2', permission='view')
+def edit_registration(request):
+    form = EditRegistrationForm(request.POST)
+    dep = DependentService.get_by_id(request)
+    if request.method == 'POST' and form.validate():
+        update_registration_helper(form, dep)
+        # flash(f'Registration updated successfully.', 'success')
+        return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+    return {'title': 'Edit Dependent Information', 'dep': dep, 'form': form}
+
+
+def update_registration_helper(form, dep):
+    if form.contactNum.data:
+        dep.contactNum = form.contactNum.data
+    if form.contactEmail.data:
+        dep.contactEmail = form.contactEmail.data
+    # db.session.commit()
 
 @view_config(route_name='register', renderer='../templates/register.jinja2', permission='view')
 def register(request):

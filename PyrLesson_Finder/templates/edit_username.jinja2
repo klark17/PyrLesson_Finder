@@ -18,14 +18,20 @@
                     {% endif %}
                 </div>
             </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-info") }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-danger float-right">
+                        <a class="edit" href="{{ request.route_url('profile', id=user.id) }}">
+                            Cancel
+                        </a>
+                    </button>
+                </div>
             </div>
-            <button class="btn btn-outline-info btn-sm">
-                <a class="nav-item nav-link" href="{{ request.route_url('profile', id=user.id) }}">
-                    Cancel
-                </a>
-            </button>
         </form>
     </div>
 {% endblock content %}
