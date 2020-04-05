@@ -1,5 +1,5 @@
 from pyramid.response import Response
-from pyramid.httpexceptions import HTTPFound, HTTPForbidden
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden, HTTPInternalServerError
 from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
 from ..services.user_record import UserService
@@ -185,6 +185,16 @@ def unregister_self(request):
             continue
     return HTTPFound(location=request.route_url('lesson_info', id=int(request.matchdict['lesson_id'])))
 
+
+@view_config(route_name='unregister_dep', renderer='string', permission='view')
+def unregister_dep(request):
+    lesson = LessonService.get_by_id(request)
+    dependent = DependentService.get_by_id(request)
+    try:
+        dependent.lessons.remove(lesson)
+        return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+    except:
+        raise HTTPInternalServerError()
 
 @forbidden_view_config()
 def forbidden_view(request):
