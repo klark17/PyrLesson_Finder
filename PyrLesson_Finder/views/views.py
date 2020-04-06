@@ -13,7 +13,7 @@ from .. import security
 
 db_err_msg = "Not Found"
 
-# TODO: add edit_registration for dependents
+# TODO: fix delete lesson for dependents and self
 # TODO: change this for security purposes
 #  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
 def get_user(request, user):
@@ -190,6 +190,7 @@ def unregister_self(request):
 def unregister_dep(request):
     lesson = LessonService.get_by_id(request)
     dependent = DependentService.get_by_id(request)
+    # pdb.set_trace()
     try:
         dependent.lessons.remove(lesson)
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
