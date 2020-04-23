@@ -20,6 +20,10 @@ class UserService(object):
         return request.dbsession.query(User).filter(User.username == username).first()
 
     @classmethod
+    def by_email(cls, email, request):
+        return request.dbsession.query(User).filter(User.email == email).first()
+
+    @classmethod
     def get_paginator(cls, request, page=1):
         query = request.dbsession.query(User)
         query = query.order_by(sa.desc(User.created))

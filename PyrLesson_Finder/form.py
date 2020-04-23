@@ -4,10 +4,8 @@ from wtforms import IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from wtforms.widgets import HiddenInput
 from wtforms_components import TimeField, DateField, DateRange
-from .models import User
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from .services.user_record import UserService
 
 strip_filter = lambda x: x.strip() if x else None
 levels = [('None', 'None'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6')]
@@ -15,11 +13,6 @@ days = [('None', 'None'), ('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
                                                   ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
                                                   ('Friday', 'Friday'), ('Saturday', 'Saturday'), ('Sunday', 'Sunday')]
 
-# validation methods
-def validate_username(form, field, request):
-    user = request.dbsession.query(User).filter(User.username == field.data).first()
-    if user:
-        raise ValidationError('Username is taken. Choose another.')
 
 class SignupForm(Form):
     active = True
@@ -37,17 +30,6 @@ class SignupForm(Form):
                                      EqualTo('password')],
                                      filters=[strip_filter])
     submit = SubmitField('Sign Up')
-
-    # def validate_username(self, form):
-    #     user = DBSession.query.filter_by(username=form.data).first()
-    #     # user = UserService.by_username(form.data, self.request)
-    #     if user:
-    #         raise ValidationError('Username is taken. Choose another.')
-    # #
-    # def validate_email(self, email):
-    #     user = User.query.filter_by(email=email.data).first()
-    #     if user:
-    #         raise ValidationError('Email is taken. Choose another.')
 
 
 class LoginForm(Form):
