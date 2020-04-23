@@ -2,6 +2,7 @@ from pyramid.response import Response
 from pyramid.httpexceptions import HTTPFound, HTTPForbidden, HTTPInternalServerError
 from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
+from wtforms.validators import ValidationError
 from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
 from ..services.dependent_record import DependentService
@@ -13,12 +14,11 @@ from .. import security
 
 db_err_msg = "Not Found"
 
-# TODO: fix delete lesson for dependents and self
 # TODO: change this for security purposes
 #  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
 def get_user(request, user):
     if user:
-        current_user = request.dbsession.query(User).get(user)
+        current_user = UserService.by_id(user, request)
         return current_user
     else:
         raise HTTPForbidden
@@ -35,10 +35,14 @@ def signup(request):
                         birthday=form.birthday.data,
                         username=form.username.data)
         new_user.set_password(form.password.data)
-        new_user.active = 1
-        request.dbsession.add(new_user)
-        request.session.flash('User Created!')
-        return HTTPFound(location=request.route_url('login'))
+        if UserService.by_username(form.username.data, request):
+            form.username.errors.append('Username taken. Please choose another one.')
+        elif UserService.by_email(form.email.data, request):
+            form.email.errors.append('Email taken. Please choose another one.')
+        else:
+            # request.session.flash('User Created!')
+            request.dbsession.add(new_user)
+            return HTTPFound(location=request.route_url('login'))
     return {'title': 'Signup', 'form': form}
 
 
@@ -58,11 +62,13 @@ def sign_in_out(request):
         user = UserService.by_username(username, request=request)
         if user and user.check_password(request.POST.get('password')):
             headers = remember(request, user.id)
+            return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid), headers=headers)
         else:
             headers = forget(request)
+            return HTTPFound(location=request.route_url('login'), headers=headers)
     else:
         headers = forget(request)
-    return HTTPFound(location=request.route_url('about'), headers=headers)
+        return HTTPFound(location=request.route_url('login'), headers=headers)
 
 
 @view_config(route_name='search', renderer='../templates/search_lessons.jinja2')
@@ -103,8 +109,11 @@ def edit_profile(request):
     form = UpdateUsernameForm(request.POST)
     user = get_user(request, request.authenticated_userid)
     if request.method == 'POST' and form.validate():
-        user.username = form.username.data
-        return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+        if UserService.by_username(form.username.data, request):
+            form.username.errors.append('Username taken. Please choose another one.')
+        else:
+            user.username = form.username.data
+            return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
     return {'title': 'Edit Information', 'user': user, 'form': form}
 
 
@@ -124,7 +133,7 @@ def update_registration_helper(form, dep):
         dep.contactNum = form.contactNum.data
     if form.contactEmail.data:
         dep.contactEmail = form.contactEmail.data
-    # db.session.commit()
+
 
 @view_config(route_name='register', renderer='../templates/register.jinja2', permission='view')
 def register(request):
@@ -133,7 +142,6 @@ def register(request):
     return {'title': 'Register', 'form': form, 'lesson': lesson}
 
 
-# TODO: look into the commit() method
 @view_config(route_name='register_dep', renderer='string', permission='view')
 def register_dep(request):
     lesson = LessonService.get_by_id(request)
