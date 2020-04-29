@@ -177,7 +177,10 @@ def register_dep(request):
 def register_yourself(request):
     lesson = LessonService.get_by_id(request)
     user = get_user(request, request.authenticated_userid)
-    user.lessons.append(lesson)
+    if lesson in user.lessons:
+        return HTTPFound(location=request.route_url('results'),headers=request.session.flash('You are already registered for this lesson.'))
+    else:
+        user.lessons.append(lesson)
     return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
