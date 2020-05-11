@@ -8,11 +8,13 @@ from ..services.lesson_record import LessonService
 from ..services.dependent_record import DependentService
 from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, EditRegistrationForm, levels
 from ..models import User, Participant
-import pdb
-from .. import security
-# from ..security import check_password
+import logging
+log = logging.getLogger(__name__)
 
 db_err_msg = "Not Found"
+
+def out(request):
+    log.debug(request.response)
 
 # TODO: change this for security purposes
 #  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
@@ -49,6 +51,7 @@ def signup(request):
 @view_config(route_name='login', renderer='../templates/login.jinja2')
 def login(request):
     form = LoginForm(request.POST)
+    out(request)
     return {'title': 'Login', 'form': form}
 
 
@@ -62,12 +65,17 @@ def sign_in_out(request):
         user = UserService.by_username(username, request=request)
         if user and user.check_password(request.POST.get('password')):
             headers = remember(request, user.id)
+            # request.session.flash('Welcome!')
+            log.debug("Login:")
+            out(request)
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid), headers=headers)
         else:
             headers = forget(request)
             return HTTPFound(location=request.route_url('login'), headers=headers)
     else:
         headers = forget(request)
+        log.debug("Logout:")
+        out(request)
         return HTTPFound(location=request.route_url('login'), headers=headers)
 
 
@@ -89,6 +97,8 @@ def results(request):
 @view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')
 def profile(request):
     user = get_user(request, request.authenticated_userid)
+    log.debug("Profile reached:")
+    out(request)
     return {'title': 'Profile', 'user': user}
 
 
@@ -178,7 +188,8 @@ def register_yourself(request):
     lesson = LessonService.get_by_id(request)
     user = get_user(request, request.authenticated_userid)
     if lesson in user.lessons:
-        return HTTPFound(location=request.route_url('results'),headers=request.session.flash('You are already registered for this lesson.'))
+        # request.session.flash('You are already registered for this lesson.')
+        return HTTPFound(location=request.route_url('results'))
     else:
         user.lessons.append(lesson)
     return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
