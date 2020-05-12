@@ -16,15 +16,6 @@ db_err_msg = "Not Found"
 def out(request):
     log.debug(request.response)
 
-# TODO: change this for security purposes
-#  https://docs.pylonsproject.org/projects/pyramid_cookbook/en/latest/auth/user_object.html
-def get_user(request, user):
-    if user:
-        current_user = UserService.by_id(user, request)
-        return current_user
-    else:
-        raise HTTPForbidden
-
 
 @view_config(route_name='signup', renderer='../templates/signup.jinja2')
 def signup(request):
@@ -66,8 +57,6 @@ def sign_in_out(request):
         if user and user.check_password(request.POST.get('password')):
             headers = remember(request, user.id)
             # request.session.flash('Welcome!')
-            log.debug("Login:")
-            out(request)
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid), headers=headers)
         else:
             headers = forget(request)
@@ -96,10 +85,7 @@ def results(request):
 
 @view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')
 def profile(request):
-    user = get_user(request, request.authenticated_userid)
-    log.debug("Profile reached:")
-    out(request)
-    return {'title': 'Profile', 'user': user}
+    return {'title': 'Profile', 'user': request.user}
 
 
 @view_config(route_name='lesson_info', renderer='../templates/lesson_info.jinja2', permission='view')
@@ -117,14 +103,13 @@ def dep_lesson_info(request):
 @view_config(route_name='edit_profile', renderer='../templates/edit_username.jinja2', permission='view')
 def edit_profile(request):
     form = UpdateUsernameForm(request.POST)
-    user = get_user(request, request.authenticated_userid)
     if request.method == 'POST' and form.validate():
         if UserService.by_username(form.username.data, request):
             form.username.errors.append('Username taken. Please choose another one.')
         else:
-            user.username = form.username.data
+            request.user.username = form.username.data
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
-    return {'title': 'Edit Information', 'user': user, 'form': form}
+    return {'title': 'Edit Information', 'user': request.user, 'form': form}
 
 
 @view_config(route_name='edit_registration', renderer='../templates/edit_registration.jinja2', permission='view')
@@ -155,14 +140,13 @@ def register(request):
 @view_config(route_name='register_dep', renderer='string', permission='view')
 def register_dep(request):
     lesson = LessonService.get_by_id(request)
-    user = get_user(request, request.authenticated_userid)
-    dependents = user.dependents
+    dependents = request.user.dependents
     print(dependents)
     dependent = Participant(fName=request.POST.get('fName'), lName=request.POST.get('lName'),
                             contactNum=request.POST.get('contactNum'),
                             contactEmail=request.POST.get('contactEmail'))
     if not dependents:
-        user.dependents.append(dependent)
+        request.user.dependents.append(dependent)
         dependent.lessons.append(lesson)
         request.dbsession.add(dependent)
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
@@ -177,7 +161,7 @@ def register_dep(request):
             existingDep.lessons.append(lesson)
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
         else:
-            user.dependents.append(dependent)
+            request.user.dependents.append(dependent)
             dependent.lessons.append(lesson)
             request.dbsession.add(dependent)
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
@@ -186,21 +170,19 @@ def register_dep(request):
 @view_config(route_name='register_yourself', renderer='string', permission='view')
 def register_yourself(request):
     lesson = LessonService.get_by_id(request)
-    user = get_user(request, request.authenticated_userid)
-    if lesson in user.lessons:
+    if lesson in request.user.lessons:
         # request.session.flash('You are already registered for this lesson.')
         return HTTPFound(location=request.route_url('results'))
     else:
-        user.lessons.append(lesson)
+        request.user.lessons.append(lesson)
     return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
 @view_config(route_name='unregister_self', renderer='string', permission='view')
 def unregister_self(request):
     lesson = LessonService.get_by_id(request)
-    current_user = get_user(request, request.authenticated_userid)
     for user in lesson.selfParticipant.all():
-        if current_user.id == user.id:
+        if request.user.id == user.id:
             lesson.selfParticipant.remove(user)
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
         else:
@@ -212,7 +194,6 @@ def unregister_self(request):
 def unregister_dep(request):
     lesson = LessonService.get_by_id(request)
     dependent = DependentService.get_by_id(request)
-    # pdb.set_trace()
     try:
         dependent.lessons.remove(lesson)
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))

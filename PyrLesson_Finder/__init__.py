@@ -3,8 +3,8 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory, JSONSerializer
 from pyramid.csrf import SessionCSRFStoragePolicy
-from pyramid.session import JSONSerializer
 from .session import JSONSerializerWithPickleFallback
+from .security import MyAuthPolicy
 
 
 def main(global_config, **settings):
@@ -12,15 +12,14 @@ def main(global_config, **settings):
     factory = SignedCookieSessionFactory('jfagfjslfasdf',
                                          secure=True,
                                          httponly=True,
-                                         serializer=serializer)
-    authentication_policy = AuthTktAuthenticationPolicy('PyrLesson_Finder.secret')
+                                         timeout=10)
     authorization_policy = ACLAuthorizationPolicy()
     with Configurator(settings=settings,
-                      authentication_policy=authentication_policy,
-                      authorization_policy=authorization_policy) as config:
-        config.set_session_factory(factory)
+                      authorization_policy=authorization_policy,
+                      session_factory=factory) as config:
         # config.set_csrf_storage_policy(SessionCSRFStoragePolicy())
         # config.set_default_csrf_options(require_csrf=True)
+        config.include('.security')
         config.include('.models')
         config.include('pyramid_jinja2')
         config.include('.routes')
