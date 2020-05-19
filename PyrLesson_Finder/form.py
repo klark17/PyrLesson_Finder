@@ -41,7 +41,6 @@ class LoginForm(Form):
 
 class SearchForm(Form):
     location = StringField('Location', filters=[strip_filter])
-    organization = StringField('Organization', filters=[strip_filter])
     startDate = DateField('Start Date', validators=[Optional()])
     startTime = TimeField('Start Time', validators=[Optional()])
     day = SelectField('Day of the Week', choices=days)

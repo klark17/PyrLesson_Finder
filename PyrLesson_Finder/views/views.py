@@ -56,10 +56,11 @@ def sign_in_out(request):
         user = UserService.by_username(username, request=request)
         if user and user.check_password(request.POST.get('password')):
             headers = remember(request, user.id)
-            # request.session.flash('Welcome!')
+            request.session.new
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid), headers=headers)
         else:
             headers = forget(request)
+            request.session.invalidate()
             return HTTPFound(location=request.route_url('login'), headers=headers)
     else:
         headers = forget(request)
@@ -85,6 +86,8 @@ def results(request):
 
 @view_config(route_name='profile', renderer='../templates/profile.jinja2', permission='view')
 def profile(request):
+    if not request.session.created:
+        request.session['user'] = request.user.id
     return {'title': 'Profile', 'user': request.user}
 
 

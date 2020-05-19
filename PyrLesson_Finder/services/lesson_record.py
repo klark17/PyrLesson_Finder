@@ -11,8 +11,6 @@ class LessonService(object):
     def get_lessons(cls, request):
         level_choice = dict(levels).get(request.POST.get('level'))
         lessons = request.dbsession.query(Lesson).filter(or_(Lesson.location == request.POST.get('location'),
-                                                             Lesson.organizationId == request.POST.get(
-                                                                 'organizationId'),
                                                              Lesson.startDate == request.POST.get('startDate'),
                                                              Lesson.startTime == request.POST.get('startTime'),
                                                              Lesson.day == request.POST.get('day'),
