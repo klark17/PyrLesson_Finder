@@ -42,7 +42,6 @@ def signup(request):
 @view_config(route_name='login', renderer='../templates/login.jinja2')
 def login(request):
     form = LoginForm(request.POST)
-    out(request)
     return {'title': 'Login', 'form': form}
 
 
@@ -64,8 +63,6 @@ def sign_in_out(request):
             return HTTPFound(location=request.route_url('login'), headers=headers)
     else:
         headers = forget(request)
-        log.debug("Logout:")
-        out(request)
         return HTTPFound(location=request.route_url('login'), headers=headers)
 
 

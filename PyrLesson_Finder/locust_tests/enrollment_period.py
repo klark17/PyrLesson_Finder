@@ -1,4 +1,4 @@
-from locust import HttpUser, SequentialTaskSet, task, between
+from locust import HttpUser, SequentialTaskSet, task, between, TaskSet
 import re
 import datetime
 from datetime import date, time
@@ -6,7 +6,7 @@ import random
 import pdb
 
 # locust -f locustfile.py --no-web -c 1000 -r 100 --host=htps://127.0.0.1:5000
-# locust -f locustfile.py --host=http://127.0.0.1:6543
+# locust -f enrollment_period.py --host=http://127.0.0.1:6543
 # https://groups.google.com/forum/#!topic/pylons-discuss/kGNO3ifiacY
 # https://stackoverflow.com/questions/55857058/how-to-find-the-cause-of-task-queue-depth-warnings-from-waitress
 # finds csrf_token on the page
@@ -28,7 +28,7 @@ def search_params(response):
 
     params = {"level": random.randrange(1, 7),
               "location": "Recreation Center " + str(random.randrange(1, 31)),
-              "day": day_of_week}
+              "day": day_of_week[random.randrange(0, len(day_of_week))]}
     return params
 
 
@@ -49,6 +49,7 @@ def signup_params(num):
 
 # finds a random lesson on the page to signup for
 def find_lesson_id(resp, pattern):
+    pdb.set_trace()
     result = re.search(pattern, resp.text)
     lesson = str(result.group(0))
     return lesson
@@ -59,7 +60,6 @@ class ExistingUserBehavior(SequentialTaskSet):
     id = str(random.randrange(1, 501))
     username = None
     password = None
-    round = 1
 
     def on_start(self):
         print("Starting existing user...")
@@ -78,10 +78,10 @@ class ExistingUserBehavior(SequentialTaskSet):
     def successful_register(self):
         get_search = self.client.get("/search")
         response = self.client.post("/search/results", search_params(get_search))
-        if self.round == 1:
+        register_self = random.randrange(1, 3)
+        if register_self == 1:
             link = find_lesson_id(response, 'http://localhost:6543/search/results/\d*/register_self')
             response = self.client.request("post", link, auth=(self.username, self.password))
-            self.round = self.round + 1
         else:
             link = find_lesson_id(response, 'http://localhost:6543/search/results/\d*/register')
             response = self.client.request("get", link, auth=(self.username, self.password))
@@ -94,7 +94,6 @@ class ExistingUserBehavior(SequentialTaskSet):
                                 "csrf_token": find_token(response)
                                },
                                auth=(self.username, self.password))
-            self.round = self.round - 1
 
     @task
     def index(self):
@@ -154,11 +153,10 @@ class NewUserBehavior(SequentialTaskSet):
         self.client.post("/user/sign-out", {"username":self.username, "password":self.password})
 
 
-class RandomBehavior(SequentialTaskSet):
+class RandomBehavior(TaskSet):
     id = str(random.randrange(1, 501))
     username = None
     password = None
-    round = 1
 
     def on_start(self):
         print("starting change name...")
@@ -184,6 +182,13 @@ class RandomBehavior(SequentialTaskSet):
         self.client.post('/update_username', {'username': self.username + "Changed",
                                            'csrf_token': csrf_token,
                                            'submit': 'Submit Changes'})
+
+    @task
+    def remove_lesson(self):
+        pass
+        # this method will remove a lesson from a user's profile if the lesson exists
+        # view lesson information
+        # submit delete lesson
 
     def on_stop(self):
         self.client.post("/user/sign-out", {"username":self.username, "password":self.password})
