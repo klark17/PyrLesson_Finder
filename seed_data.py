@@ -1,4 +1,4 @@
-from PyrLesson_Finder.models import User, Lesson, Participant
+from PyrLesson_Finder.models import User, Lesson, Participant, Organization
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -37,7 +37,7 @@ for i in range(1, 351):
 	id = str(i)
 
 	# set a user that will be the dependents guardian
-	current_user = User.query.get(random.randrange(102, 500, 2))
+	current_user = session.query(User).get(random.randrange(102, 500, 2))
 	# create a new dependent
 	dep = Participant(fName="Dependent" + id,
 					  lName=current_user.lName,
@@ -74,7 +74,7 @@ for i in range(1, 201):
 	id = str(i)
 
 	# set organization that created the lesson
-	org = Organization.query.get(random.randrange(1, 31))
+	org = session.query(Organization).get(random.randrange(1, 31))
 
 	# set random variables for lesson
 	year = random.randrange(2020, 2021)
