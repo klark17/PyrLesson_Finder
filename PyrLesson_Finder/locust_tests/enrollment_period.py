@@ -51,8 +51,11 @@ def signup_params(num):
 def find_lesson_id(resp, pattern):
     pdb.set_trace()
     result = re.search(pattern, resp.text)
-    lesson = str(result.group(0))
-    return lesson
+    if result:
+        lesson = str(result.group(0))
+        return lesson
+    else:
+        return False
 
 
 class ExistingUserBehavior(SequentialTaskSet):
@@ -153,7 +156,7 @@ class NewUserBehavior(SequentialTaskSet):
         self.client.post("/user/sign-out", {"username":self.username, "password":self.password})
 
 
-class RandomBehavior(TaskSet):
+class RandomUserBehavior(TaskSet):
     id = str(random.randrange(1, 501))
     username = None
     password = None
@@ -185,17 +188,39 @@ class RandomBehavior(TaskSet):
 
     @task
     def remove_lesson(self):
-        pass
-        # this method will remove a lesson from a user's profile if the lesson exists
-        # view lesson information
-        # submit delete lesson
+        profile_resp = self.client.request("get", "/profile", auth=(self.username, self.password))
+        lesson_link = find_lesson_id(profile_resp, '/lesson_info/\d*\?user_id=\d*')
+        if lesson_link:
+            lesson_info = self.client.get(lesson_link)
+            unregister_link = find_lesson_id(lesson_info, '')
+            self.client.post(unregister_link)
+        else:
+            pass
+
+    @task
+    def update_dependent(self):
+        profile_resp = self.client.request("get", "/profile", auth=(self.username, self.password))
+        lesson_link = find_lesson_id(profile_resp, '/dep_lesson_info/\d*/\d*')
+        if lesson_link:
+            lesson_info = self.client.get(lesson_link)
+            edit_info_link = find_lesson_id(lesson_info, '/edit_registration/\d*')
+            edit_page = self.client.get(edit_info_link)
+            csrf_token = find_token(edit_page)
+            new_email = "change" + self.id + "email@mail.com"
+            new_phone = "203-123-45" + self.id
+            self.client.post(edit_page, {'contactEmail': new_email,
+                                  'contactNum': new_phone,
+                                  'csrf_token': csrf_token,
+                                  'submit': 'Submit Changes'})
+        else:
+            pass
 
     def on_stop(self):
         self.client.post("/user/sign-out", {"username":self.username, "password":self.password})
 
 
 class WebsiteUser(HttpUser):
-    tasks = {
-        ExistingUserBehavior: 4
-    }
+    tasks = [
+        RandomUserBehavior
+    ]
     wait_time = between(3.0, 10.5)

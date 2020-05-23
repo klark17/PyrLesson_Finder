@@ -17,5 +17,4 @@ def includeme(config):
     config.add_route('edit_registration', '/lesson/edit/{dep_id}', factory='PyrLesson_Finder.security.UserFactory')
     config.add_route('unregister_self', '/lesson/{lesson_id}/unregister/', factory='PyrLesson_Finder.security.UserFactory')
     config.add_route('unregister_dep', '/lesson/{lesson_id}/unregister/{dep_id}/', factory='PyrLesson_Finder.security.UserFactory')
-
-
+    config.add_route('remove_dep', '/remove_dep/{dep_id}', factory='PyrLesson_Finder.security.UserFactory')

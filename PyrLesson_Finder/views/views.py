@@ -9,6 +9,7 @@ from ..services.dependent_record import DependentService
 from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, EditRegistrationForm, levels
 from ..models import User, Participant
 import logging
+import pdb
 log = logging.getLogger(__name__)
 
 db_err_msg = "Not Found"
@@ -199,6 +200,14 @@ def unregister_dep(request):
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
     except:
         raise HTTPInternalServerError()
+
+
+@view_config(route_name='remove_dep', renderer='string', permission='view')
+def remove_dep(request):
+    dependent = DependentService.get_by_id(request)
+    request.dbsession.delete(dependent)
+    return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+
 
 @forbidden_view_config()
 def forbidden_view(request):

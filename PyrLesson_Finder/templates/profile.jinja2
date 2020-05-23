@@ -48,17 +48,20 @@
                 {% endfor %}
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <h3>Dependent's Lessons</h3>
-                </div>
+                <h3>Dependent's Lessons</h3>
             </div>
             <div class="row">
                 {% for dependent in user.dependents %}
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <h4>Name: {{ dependent.fName }} {{ dependent.lName }}</h4>
                         <p>Contact Email: {{ dependent.contactEmail }}</p>
                         <p>Contact Number: {{ dependent.contactNum }}</p>
                         <h4>Lessons:</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <form action="{{ request.route_url('remove_dep', dep_id=dependent.id) }}" method="POST">
+                            <input class="btn btn-danger" type="submit" value="Remove Dependent">
+                        </form>
                     </div>
                     {% for lesson in dependent.lessons %}
                     <div class="col-md-6">

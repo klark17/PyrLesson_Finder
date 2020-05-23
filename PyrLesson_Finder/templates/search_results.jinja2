@@ -1,46 +1,42 @@
 {% extends "layout3.jinja2" %}
 {% block content %}
     <div class="content-section">
-{#        <div class="row">#}
-            <div class="card-deck">
-                {% for result in results %}
-                <div class="col-md-6">
-                    <div class="card" style='width: 18rem;'>
-                        <div class="card-body">
-                            <h4 class="card-title">{{ result.name }}</h4>
-                            <h5 class="card-subtitle mb-2 text-muted">Location: {{ result.location }}</h5>
-                            <h5 class="card-subtitle mb-2 text-muted">Instructor: {{ result.instructor }}</h5>
-                            <p class="card-text">Difficulty Level: {{ result.level }}</p>
-                            <p class="card-text">Start/End Date: {{ result.startDate }} to {{ result.endDate }}</p>
-                            <p class="card-text">Time: {{ result.startTime }} - {{ result.endTime }}</p>
-                            {% if result.day == 'None' %}
-                                <p class="card-text">Day: TBA</p>
-                            {% else %}
-                                <p class="card-text">Day: {{ result.day }}</p>
-                            {% endif %}
-                            <p class="card-text">Description: {{ result.desc }}</p>
-                            <p class="card-text">
-                                Contact {{ result.contactEmail.email }} for more information.
-                            </p>
-                            {% if result.participants.count() + result.selfParticipant.count() == result.cap %}
-                                <p class="card-text">This class is full.</p>
-                            {% else %}
-                                <button id="register" class="btn btn-outline-primary btn-sm">
-                                    <a class="card-link" href="{{ request.route_url('register_yourself', lesson_id=result.id) }}">
-                                        Register Yourself
-                                    </a>
-                                </button>
-                                <button id="register" class="btn btn-outline-primary btn-sm">
-                                    <a class="card-link" href="{{ request.route_url('register', lesson_id=result.id) }}">
-                                        Register Dependent
-                                    </a>
-                                </button>
-                            {% endif %}
-                        </div>
+        <div class="row">
+            {% for result in results %}
+            <div class="col-md-4">
+                <div class="card" style='width: 18rem;'>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ result.name }}</h4>
+                        <h5 class="card-subtitle mb-2 text-muted">Location: {{ result.location }}</h5>
+                        <h5 class="card-subtitle mb-2 text-muted">Instructor: {{ result.instructor }}</h5>
+                        <p class="card-text">Difficulty Level: {{ result.level }}</p>
+                        <p class="card-text">Start/End Date: {{ result.startDate }} to {{ result.endDate }}</p>
+                        <p class="card-text">Time: {{ result.startTime }} - {{ result.endTime }}</p>
+                        {% if result.day == 'None' %}
+                            <p class="card-text">Day: TBA</p>
+                        {% else %}
+                            <p class="card-text">Day: {{ result.day }}</p>
+                        {% endif %}
+                        <p class="card-text">Description: {{ result.desc }}</p>
+                        <p class="card-text">
+                            Contact {{ result.contactEmail.email }} for more information.
+                        </p>
+                        {% if result.participants.count() + result.selfParticipant.count() == result.cap %}
+                            <p class="card-text">This class is full.</p>
+                        {% else %}
+                            <div class="register-buttons">
+                                <a id="self" class="btn btn-primary btn-sm" href="{{ request.route_url('register_yourself', lesson_id=result.id) }}">
+                                    Register Yourself
+                                </a>
+                                <a id="dep" class="btn btn-success btn-sm" href="{{ request.route_url('register', lesson_id=result.id) }}">
+                                    Register Dependent
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
-{#        </div>#}
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}

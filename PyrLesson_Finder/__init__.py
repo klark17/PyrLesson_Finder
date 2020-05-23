@@ -12,7 +12,7 @@ def main(global_config, **settings):
     factory = SignedCookieSessionFactory('jfagfjslfasdf',
                                          secure=True,
                                          httponly=True,
-                                         timeout=10)
+                                         serializer=serializer)
     authorization_policy = ACLAuthorizationPolicy()
     with Configurator(settings=settings,
                       authorization_policy=authorization_policy,
