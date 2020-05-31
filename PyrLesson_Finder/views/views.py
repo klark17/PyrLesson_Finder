@@ -8,15 +8,9 @@ from ..services.lesson_record import LessonService
 from ..services.dependent_record import DependentService
 from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, EditRegistrationForm, levels
 from ..models import User, Participant
-import logging
 import pdb
-log = logging.getLogger(__name__)
 
 db_err_msg = "Not Found"
-
-def out(request):
-    log.debug(request.response)
-
 
 @view_config(route_name='signup', renderer='../templates/signup.jinja2')
 def signup(request):
@@ -142,7 +136,6 @@ def register(request):
 def register_dep(request):
     lesson = LessonService.get_by_id(request)
     dependents = request.user.dependents
-    print(dependents)
     dependent = Participant(fName=request.POST.get('fName'), lName=request.POST.get('lName'),
                             contactNum=request.POST.get('contactNum'),
                             contactEmail=request.POST.get('contactEmail'))

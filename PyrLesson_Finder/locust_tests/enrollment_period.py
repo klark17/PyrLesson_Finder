@@ -27,16 +27,19 @@ def search_params(response):
 
 # sets a set of params to signup with Lesson Finder
 def signup_params(num):
-    id = str(num + 1)
     year = random.randrange(1960, 2001)
     month = random.randrange(1, 13)
     day = random.randrange(1, 29)
-    params = {"fName": "Test" + id,
+    fName = "Test" + num
+    email = "test" + num + "user@mail.com"
+    username = "Test" + num + "User"
+    password = "thi5IztesT" + num
+    params = {"fName": fName,
               "lName": "User",
-              "email": "test" + id + "user@mail.com",
+              "email": email,
               "birthday": datetime.date(year, month, day),
-              "username": "Test" + id + "User",
-              "password": "thi5IztesT" + id}
+              "username": username,
+              "password": password}
 
     return(params)
 
@@ -52,12 +55,13 @@ def find_lesson_id(resp, pattern):
 
 class ExistingUserBehavior(SequentialTaskSet):
 
-    id = str(random.randrange(1, 501))
+    id = None
     username = None
     password = None
 
     def on_start(self):
-        print("Starting existing user...")
+        self.id = str(random.randrange(1, 501))
+        print("Starting existing user..." + self.id)
         response = self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
@@ -74,36 +78,40 @@ class ExistingUserBehavior(SequentialTaskSet):
         get_search = self.client.get("/search")
         response = self.client.post("/search/results", search_params(get_search))
         register_self = random.randrange(1, 3)
-        if register_self == 1:
-            link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_self')
-            self.client.request("post", link, auth=(self.username, self.password))
+        self_reg_link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_self')
+        if (register_self == 1) and self_reg_link:
+            self.client.request("post", self_reg_link, auth=(self.username, self.password))
         else:
-            link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register')
-            response = self.client.request("get", link, auth=(self.username, self.password))
-            self.client.request("post",
-                                link,
-                                params={
-                                "fName": "Dependent " + self.id,
-                                "lName": "User",
-                                "contactEmail": ""},
-                               auth=(self.username, self.password))
+            dep_link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register')
+            if dep_link:
+                response = self.client.request("get", dep_link, auth=(self.username, self.password))
+                dep_reg = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_dep')
+                if dep_reg:
+                    fName = "Dependent" + self.id
+                    email = "test" + self.id + "user@mail.com"
+                    self.client.post(dep_reg, params={"fName": fName,
+                                                      "lName": "User",
+                                                      "contactEmail": email,
+                                                      "contactNum": "",
+                                                      "submit": "Register"})
 
     @task
     def index(self):
-        self.client.get("/")
+        self.client.get("http://localhost:6543/")
 
     def on_stop(self):
-        self.client.post("/auth/out", {"username":self.username, "password":self.password})
+        self.client.post("http://localhost:6543/auth/out")
 
 
 class NewUserBehavior(SequentialTaskSet):
-    id = str(random.randrange(501, 1001))
+    id = None
     username = None
     password = None
 
     @task
     def home(self):
-        print("Starting new user...")
+        self.id = str(random.randrange(1, 501))
+        print("Starting new user..." + self.id)
         self.client.get("/")
 
     @task
@@ -111,12 +119,13 @@ class NewUserBehavior(SequentialTaskSet):
         get_search = self.client.get("/search")
         response = self.client.post("/search", search_params(get_search))
         link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_self')
-        self.client.request("post", link)
+        if link:
+            self.client.request("post", link)
 
     @task
     def signup(self):
         self.client.get("/signup")
-        self.client.post("/signup", signup_params(int(self.id)))
+        self.client.post("/signup", signup_params(self.id))
 
     @task
     def start_authorized_user(self):
@@ -139,16 +148,17 @@ class NewUserBehavior(SequentialTaskSet):
             self.client.request("post", link, auth=(self.username, self.password))
 
     def on_stop(self):
-        self.client.post("/auth/out", {"username":self.username, "password":self.password})
+        self.client.post("http://localhost:6543/auth/out")
 
 
 class RandomBehavior(TaskSet):
-    id = str(random.randrange(1, 501))
+    id = None
     username = None
     password = None
 
     def on_start(self):
         self.client.get('/login')
+        self.id = str(random.randrange(1, 501))
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
         self.client.post('/auth/in', {'username': self.username,
@@ -173,16 +183,18 @@ class RandomBehavior(TaskSet):
     def register_dep(self):
         get_search = self.client.get("/search")
         response = self.client.post("/search/results", search_params(get_search))
-        link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register')
-        response = self.client.request("get", link, auth=(self.username, self.password))
-        if response.code == 200:
-            self.client.request("post",
-                                link,
-                                params={
-                                "fName": "Dependent " + self.id,
-                                "lName": "User",
-                                "contactEmail": ""},
-                               auth=(self.username, self.password))
+        dep_link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register')
+        if dep_link:
+            response = self.client.request("get", dep_link, auth=(self.username, self.password))
+            dep_reg = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_dep/')
+            if dep_reg:
+                fName = "Dependent" + self.id
+                email = "test" + self.id + "user@mail.com"
+                self.client.post(dep_reg, params={"fName": fName,
+                                        "lName": "User",
+                                        "contactEmail": email,
+                                        "contactNum": "",
+                                        "submit": "Register"})
 
     @task
     def remove_lesson(self):
@@ -190,8 +202,12 @@ class RandomBehavior(TaskSet):
         lesson_link = find_lesson_id(profile_resp, 'http://127.0.0.1:6543/lesson/info/\d*')
         if lesson_link:
             lesson_info = self.client.get(lesson_link)
-            unregister_link = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/\d*/unregister/')
-            self.client.post(unregister_link)
+            unregister_self = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/\d*/unregister/')
+            unregister_dep = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/\d*/unregister/\d*')
+            if unregister_self:
+                self.client.post(unregister_self)
+            else:
+                self.client.post(unregister_dep)
         else:
             pass
 
@@ -222,7 +238,7 @@ class RandomBehavior(TaskSet):
             pass
 
     def on_stop(self):
-        self.client.post("/auth/out", {"username":self.username, "password":self.password})
+        self.client.post("http://localhost:6543/auth/out")
 
 
 class WebsiteUser(HttpUser):
