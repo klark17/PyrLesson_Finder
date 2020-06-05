@@ -65,13 +65,11 @@ class ExistingUserBehavior(SequentialTaskSet):
         response = self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
-        self.client.post('/auth/in', {'username': self.username,
-                                           'password': self.password})
-
-    @task
-    def profile(self):
-        self.client.request("get", "/profile", auth=(self.username, self.password))
-
+        self.client.request("post",
+                            "http://127.0.0.1:6543/auth/in",
+                            data={"username": self.username,
+                                  "password": self.password,
+                                  "submit": "Login"})
 
     @task
     def successful_register(self):
@@ -84,16 +82,18 @@ class ExistingUserBehavior(SequentialTaskSet):
         else:
             dep_link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register')
             if dep_link:
-                response = self.client.request("get", dep_link, auth=(self.username, self.password))
-                dep_reg = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_dep')
+                response = self.client.get(dep_link, auth=(self.username, self.password))
+                dep_reg = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_dep/')
                 if dep_reg:
                     fName = "Dependent" + self.id
                     email = "test" + self.id + "user@mail.com"
-                    self.client.post(dep_reg, params={"fName": fName,
-                                                      "lName": "User",
-                                                      "contactEmail": email,
-                                                      "contactNum": "",
-                                                      "submit": "Register"})
+                    self.client.request("post",
+                                        dep_reg,
+                                        data={"fName": fName,
+                                              "lName": "User",
+                                              "contactEmail": email,
+                                              "contactNum": ""},
+                                        auth=(self.username, self.password))
 
     @task
     def index(self):
@@ -117,10 +117,10 @@ class NewUserBehavior(SequentialTaskSet):
     @task
     def failed_register(self):
         get_search = self.client.get("/search")
-        response = self.client.post("/search", search_params(get_search))
+        response = self.client.post("/search/results", search_params(get_search))
         link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_self')
         if link:
-            self.client.request("post", link)
+            self.client.post(link)
 
     @task
     def signup(self):
@@ -132,12 +132,11 @@ class NewUserBehavior(SequentialTaskSet):
         self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
-        self.client.post('/auth/in', {'username': self.username,
-                                           'password': self.password})
-
-    @task
-    def profile(self):
-        self.client.request("get", "/profile", auth=(self.username, self.password))
+        self.client.request("post",
+                            "http://127.0.0.1:6543/auth/in",
+                            data={"username": self.username,
+                                  "password": self.password,
+                                  "submit": "Login"})
 
     @task
     def successful_register(self):
@@ -145,7 +144,7 @@ class NewUserBehavior(SequentialTaskSet):
         response = self.client.post("/search", search_params(get_search))
         link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_self')
         if link:
-            self.client.request("post", link, auth=(self.username, self.password))
+            self.client.post(link, auth=(self.username, self.password))
 
     def on_stop(self):
         self.client.post("http://localhost:6543/auth/out")
@@ -155,21 +154,29 @@ class RandomBehavior(TaskSet):
     id = None
     username = None
     password = None
+    profile_path = None
 
     def on_start(self):
         self.client.get('/login')
         self.id = str(random.randrange(1, 501))
+        print("starting user..." + self.id)
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
-        self.client.post('/auth/in', {'username': self.username,
-                                           'password': self.password})
+        self.profile_path = "http://127.0.0.1:6543/profile/" + self.id
+        self.client.request("post",
+                            "http://127.0.0.1:6543/auth/in",
+                            data={"username": self.username,
+                                  "password": self.password,
+                                  "submit": "Login"})
 
     @task
     def edit_username(self):
-        self.client.request("get", "/profile", auth=(self.username, self.password))
         edit_link = "http://127.0.0.1:6543/profile/" + self.id + "/edit"
-        response = self.client.get(edit_link)
-        self.client.post(edit_link, {'username': self.username + "Changed"})
+        self.client.get(edit_link)
+        self.client.request("post",
+                            edit_link,
+                            data={'username': self.username + "Changed"},
+                            auth=(self.username, self.password))
 
     @task
     def register_self(self):
@@ -177,7 +184,7 @@ class RandomBehavior(TaskSet):
         response = self.client.post("/search", search_params(get_search))
         link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_self')
         if link:
-            self.client.request("post", link, auth=(self.username, self.password))
+            self.client.post(link, auth=(self.username, self.password))
 
     @task
     def register_dep(self):
@@ -185,20 +192,22 @@ class RandomBehavior(TaskSet):
         response = self.client.post("/search/results", search_params(get_search))
         dep_link = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register')
         if dep_link:
-            response = self.client.request("get", dep_link, auth=(self.username, self.password))
+            response = self.client.get(dep_link, auth=(self.username, self.password))
             dep_reg = find_lesson_id(response, 'http://127.0.0.1:6543/search/results/\d*/register_dep/')
             if dep_reg:
                 fName = "Dependent" + self.id
                 email = "test" + self.id + "user@mail.com"
-                self.client.post(dep_reg, params={"fName": fName,
+                self.client.request("post",
+                                    dep_reg,
+                                    data={"fName": fName,
                                         "lName": "User",
                                         "contactEmail": email,
-                                        "contactNum": "",
-                                        "submit": "Register"})
+                                        "contactNum": ""},
+                                    auth=(self.username, self.password))
 
     @task
     def remove_lesson(self):
-        profile_resp = self.client.request("get", "/profile", auth=(self.username, self.password))
+        profile_resp = self.client.request("get", self.profile_path)
         lesson_link = find_lesson_id(profile_resp, 'http://127.0.0.1:6543/lesson/info/\d*')
         if lesson_link:
             lesson_info = self.client.get(lesson_link)
@@ -213,22 +222,25 @@ class RandomBehavior(TaskSet):
 
     @task
     def update_dependent(self):
-        profile_resp = self.client.request("get", "/profile", auth=(self.username, self.password))
+        profile_resp = self.client.request("get", self.profile_path)
         lesson_link = find_lesson_id(profile_resp, 'http://127.0.0.1:6543/lesson/\d*/dep_info/\d*')
         if lesson_link:
             lesson_info = self.client.get(lesson_link)
             edit_info_link = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/edit/\d*')
-            edit_page = self.client.get(edit_info_link)
+            edit_page = self.client.get(edit_info_link, auth=(self.username, self.password))
             new_email = "change" + self.id + "email@mail.com"
             new_phone = "203-123-45" + self.id
-            self.client.post(edit_page, {'contactEmail': new_email,
-                                  'contactNum': new_phone})
+            self.client.request("post",
+                                edit_page,
+                                data={"contactEmail": new_email,
+                                      "contactNum": new_phone},
+                                auth=(self.username, self.password))
         else:
             pass
 
     @task
     def delete_dependent(self):
-        profile_resp = self.client.request("get", "/profile", auth=(self.username, self.password))
+        profile_resp = self.client.request("get", self.profile_path, auth=(self.username, self.password))
         delete_link = find_lesson_id(profile_resp, 'http://127.0.0.1:6543/remove_dep/\d*')
         if delete_link:
             self.client.request("post",
@@ -243,8 +255,6 @@ class RandomBehavior(TaskSet):
 
 class WebsiteUser(HttpUser):
     tasks = {
-        NewUserBehavior: 1,
-        ExistingUserBehavior: 10,
-        RandomBehavior: 1
+		RandomBehavior: 10,
     }
     wait_time = between(3.0, 10.5)

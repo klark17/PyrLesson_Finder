@@ -161,8 +161,8 @@ def register_dep(request):
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
 
 
-@view_config(route_name='register_yourself', renderer='string', permission='view')
-def register_yourself(request):
+@view_config(route_name='register_self', renderer='string', permission='view')
+def register_self(request):
     lesson = LessonService.get_by_id(request)
     if lesson in request.user.lessons:
         # request.session.flash('You are already registered for this lesson.')

@@ -25,7 +25,7 @@
                             <p class="card-text">This class is full.</p>
                         {% else %}
                             <div class="register-buttons">
-                                <a id="self" class="btn btn-primary btn-sm" href="{{ request.route_url('register_yourself', lesson_id=result.id) }}">
+                                <a id="self" class="btn btn-primary btn-sm" href="{{ request.route_url('register_self', lesson_id=result.id) }}">
                                     Register Yourself
                                 </a>
                                 <a id="dep" class="btn btn-success btn-sm" href="{{ request.route_url('register', lesson_id=result.id) }}">
