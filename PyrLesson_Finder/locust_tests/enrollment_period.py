@@ -65,11 +65,10 @@ class ExistingUserBehavior(SequentialTaskSet):
         response = self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
-        self.client.request("post",
-                            "http://127.0.0.1:6543/auth/in",
-                            data={"username": self.username,
-                                  "password": self.password,
-                                  "submit": "Login"})
+        self.client.post("http://127.0.0.1:6543/auth/in",
+                         {"username": self.username,
+                          "password": self.password,
+                          "submit": "Login"})
 
     @task
     def successful_register(self):
@@ -132,11 +131,10 @@ class NewUserBehavior(SequentialTaskSet):
         self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
-        self.client.request("post",
-                            "http://127.0.0.1:6543/auth/in",
-                            data={"username": self.username,
-                                  "password": self.password,
-                                  "submit": "Login"})
+        self.client.post("http://127.0.0.1:6543/auth/in",
+                         {"username": self.username,
+                          "password": self.password,
+                          "submit": "Login"})
 
     @task
     def successful_register(self):
@@ -163,11 +161,10 @@ class RandomBehavior(TaskSet):
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
         self.profile_path = "http://127.0.0.1:6543/profile/" + self.id
-        self.client.request("post",
-                            "http://127.0.0.1:6543/auth/in",
-                            data={"username": self.username,
-                                  "password": self.password,
-                                  "submit": "Login"})
+        self.client.post("http://127.0.0.1:6543/auth/in",
+                         {"username": self.username,
+                          "password": self.password,
+                          "submit": "Login"})
 
     @task
     def edit_username(self):
@@ -227,11 +224,11 @@ class RandomBehavior(TaskSet):
         if lesson_link:
             lesson_info = self.client.get(lesson_link)
             edit_info_link = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/edit/\d*')
-            edit_page = self.client.get(edit_info_link, auth=(self.username, self.password))
+            self.client.get(edit_info_link, auth=(self.username, self.password))
             new_email = "change" + self.id + "email@mail.com"
             new_phone = "203-123-45" + self.id
             self.client.request("post",
-                                edit_page,
+                                edit_info_link,
                                 data={"contactEmail": new_email,
                                       "contactNum": new_phone},
                                 auth=(self.username, self.password))
@@ -255,6 +252,8 @@ class RandomBehavior(TaskSet):
 
 class WebsiteUser(HttpUser):
     tasks = {
-		RandomBehavior: 10,
+        NewUserBehavior: 1,
+		ExistingUserBehavior: 10,
+		RandomBehavior: 1
     }
     wait_time = between(3.0, 10.5)

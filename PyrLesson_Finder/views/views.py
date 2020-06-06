@@ -28,7 +28,6 @@ def signup(request):
         elif UserService.by_email(form.email.data, request):
             form.email.errors.append('Email taken. Please choose another one.')
         else:
-            # request.session.flash('User Created!')
             request.dbsession.add(new_user)
             return HTTPFound(location=request.route_url('login'))
     return {'title': 'Signup', 'form': form}
