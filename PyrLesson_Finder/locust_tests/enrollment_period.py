@@ -59,9 +59,9 @@ class ExistingUserBehavior(SequentialTaskSet):
     username = None
     password = None
 
-    def on_start(self):
+    @task
+    def user_login(self):
         self.id = str(random.randrange(1, 501))
-        print("Starting existing user..." + self.id)
         response = self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
@@ -110,7 +110,6 @@ class NewUserBehavior(SequentialTaskSet):
     @task
     def home(self):
         self.id = str(random.randrange(1, 501))
-        print("Starting new user..." + self.id)
         self.client.get("/")
 
     @task
@@ -157,7 +156,6 @@ class RandomBehavior(TaskSet):
     def on_start(self):
         self.client.get('/login')
         self.id = str(random.randrange(1, 501))
-        print("starting user..." + self.id)
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
         self.profile_path = "http://127.0.0.1:6543/profile/" + self.id
