@@ -145,14 +145,18 @@ def register_dep(request):
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
     elif dependents:
         exists = False
+        existingDep = False
         for dep in dependents:
             if dep.fName == dependent.fName and dep.lName == dependent.lName:
                 exists = True
                 existingDep = dep
                 break
-        if exists == True:
-            existingDep.lessons.append(lesson)
-            return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
+        if exists:
+            if lesson in existingDep.lessons:
+                return HTTPFound(location=request.route_url('search'))
+            else:
+                existingDep.lessons.append(lesson)
+                return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
         else:
             request.user.dependents.append(dependent)
             dependent.lessons.append(lesson)
