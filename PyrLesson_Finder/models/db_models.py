@@ -22,8 +22,7 @@ hosting = Table('hosting',
 				Column('lessonId', Integer, ForeignKey('lesson.id')),
 				)
 
-# TODO: DB Browser for SQLite
-# TODO: make sure you look into how sessions are handled in both frameworks
+
 class User(Base):
 	__tablename__ = 'user'
 	id = Column(Integer, primary_key=True)
@@ -36,11 +35,6 @@ class User(Base):
 	password = Column(String(60), nullable=False)
 	lessons = relationship('Lesson', secondary=lessons, backref=backref('selfParticipant', lazy='dynamic'))
 	dependents = relationship('Participant', backref=backref('guardian'))
-
-	# organization = relationship('Organization', uselist=False, backref='admin')
-	# roles = relationship('Role', secondary='user_roles', backref=backref('users', lazy='dynamic'))
-	# active = Column('is_active', Boolean(), nullable=False, server_default='0')
-	# organizer = relationship('Lesson', backref='contactEmail', lazy='dynamic')
 
 	def set_password(self, pw):
 		pwHash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())

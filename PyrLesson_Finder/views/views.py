@@ -39,7 +39,6 @@ def login(request):
     return {'title': 'Login', 'form': form}
 
 
-# TODO: check if time for session
 @view_config(route_name='auth', match_param='action=in', renderer='string',
              request_method='POST')
 @view_config(route_name='auth', match_param='action=out', renderer='string')
@@ -49,11 +48,9 @@ def sign_in_out(request):
         user = UserService.by_username(username, request=request)
         if user and user.check_password(request.POST.get('password')):
             headers = remember(request, user.id)
-            request.session.new
             return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid), headers=headers)
         else:
             headers = forget(request)
-            request.session.invalidate()
             return HTTPFound(location=request.route_url('login'), headers=headers)
     else:
         headers = forget(request)
@@ -153,7 +150,7 @@ def register_dep(request):
                 break
         if exists:
             if lesson in existingDep.lessons:
-                return HTTPFound(location=request.route_url('search'))
+                return HTTPFound(location=request.route_url('register', lesson_id=request.matchdict['lesson_id']))
             else:
                 existingDep.lessons.append(lesson)
                 return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
