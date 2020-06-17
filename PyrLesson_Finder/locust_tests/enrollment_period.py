@@ -244,6 +244,8 @@ class RandomBehavior(TaskSet):
 
 class WebsiteUser(HttpUser):
     tasks = {
+        NewUserBehavior: 1,
+		ExistingUserBehavior: 10,
 		RandomBehavior: 1
     }
     wait_time = between(3.0, 10.5)
