@@ -2,7 +2,6 @@ from ..models.db_models import Lesson
 from ..form import levels
 from sqlalchemy import or_
 
-
 # use this to get search results instead
 class LessonService(object):
     @classmethod
@@ -14,7 +13,6 @@ class LessonService(object):
                                                              Lesson.day == request.POST.get('day'),
                                                              Lesson.level == level_choice)).all()
         return lessons
-
 
     @classmethod
     def get_by_id(cls, request):

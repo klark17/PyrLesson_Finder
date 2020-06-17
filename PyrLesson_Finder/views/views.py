@@ -1,14 +1,11 @@
-from pyramid.response import Response
 from pyramid.httpexceptions import HTTPFound, HTTPForbidden, HTTPInternalServerError
 from pyramid.view import view_config, forbidden_view_config, view_defaults
 from pyramid.security import remember, forget
-from wtforms.validators import ValidationError
 from ..services.user_record import UserService
 from ..services.lesson_record import LessonService
 from ..services.dependent_record import DependentService
 from ..form import LoginForm, SignupForm, SearchForm, RegistrationForm, UpdateUsernameForm, EditRegistrationForm, levels
 from ..models import User, Participant
-import pdb
 
 db_err_msg = "Not Found"
 
@@ -109,7 +106,6 @@ def edit_registration(request):
     dep = DependentService.get_by_id(request)
     if request.method == 'POST' and form.validate():
         update_registration_helper(form, dep)
-        # flash(f'Registration updated successfully.', 'success')
         return HTTPFound(location=request.route_url('profile', id=request.authenticated_userid))
     return {'title': 'Edit Dependent Information', 'dep': dep, 'form': form}
 
@@ -165,7 +161,6 @@ def register_dep(request):
 def register_self(request):
     lesson = LessonService.get_by_id(request)
     if lesson in request.user.lessons:
-        # request.session.flash('You are already registered for this lesson.')
         return HTTPFound(location=request.route_url('results'))
     else:
         request.user.lessons.append(lesson)

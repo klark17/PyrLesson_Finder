@@ -1,22 +1,10 @@
 from locust import HttpUser, SequentialTaskSet, task, between, TaskSet
 import re
 import datetime
-from datetime import date, time
 import random
-import pdb
-
-# locust -f locustfile.py --no-web -c 1000 -r 100 --host=htps://127.0.0.1:5000
-# locust -f enrollment_period.py --host=http://127.0.0.1:6543
-# https://groups.google.com/forum/#!topic/pylons-discuss/kGNO3ifiacY
-# https://stackoverflow.com/questions/55857058/how-to-find-the-cause-of-task-queue-depth-warnings-from-waitress
 
 # sets a hash of params to search for
 def search_params(response):
-    # year = random.randrange(2020, 2021)
-    # month = random.randrange(1, 13)
-    # day = random.randrange(1, 29)
-    # startDate = date(year, month, day)
-    # startTime = random.randrange(7, 19)
     day_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
     params = {"level": random.randrange(1, 7),
@@ -55,13 +43,12 @@ def find_lesson_id(resp, pattern):
 
 class ExistingUserBehavior(SequentialTaskSet):
 
-    id = None
+    id = str(random.randrange(1, 501))
     username = None
     password = None
 
     @task
     def user_login(self):
-        self.id = str(random.randrange(1, 501))
         response = self.client.get('/login')
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
@@ -103,13 +90,12 @@ class ExistingUserBehavior(SequentialTaskSet):
 
 
 class NewUserBehavior(SequentialTaskSet):
-    id = None
+    id = str(random.randrange(1, 501))
     username = None
     password = None
 
     @task
     def home(self):
-        self.id = str(random.randrange(1, 501))
         self.client.get("/")
 
     @task
@@ -148,14 +134,13 @@ class NewUserBehavior(SequentialTaskSet):
 
 
 class RandomBehavior(TaskSet):
-    id = None
+    id = str(random.randrange(1, 501))
     username = None
     password = None
     profile_path = None
 
     def on_start(self):
         self.client.get('/login')
-        self.id = str(random.randrange(1, 501))
         self.username = 'Test' + self.id + 'User'
         self.password = 'thi5IztesT' + self.id
         self.profile_path = "http://127.0.0.1:6543/profile/" + self.id

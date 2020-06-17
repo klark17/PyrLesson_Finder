@@ -1,7 +1,4 @@
 from ..models.db_models import Participant
-from ..form import levels
-from sqlalchemy import or_
-
 
 # use this to get search results instead
 class DependentService(object):
