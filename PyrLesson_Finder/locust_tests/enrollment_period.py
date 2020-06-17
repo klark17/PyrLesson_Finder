@@ -192,10 +192,19 @@ class RandomBehavior(TaskSet):
         if lesson_link:
             lesson_info = self.client.get(lesson_link)
             unregister_self = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/\d*/unregister/')
-            unregister_dep = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/\d*/unregister/\d*')
             if unregister_self:
                 self.client.post(unregister_self)
-            else:
+        else:
+            pass
+
+    @task
+    def remove_dep_lesson(self):
+        profile_resp = self.client.request("get", self.profile_path)
+        lesson_link = find_lesson_id(profile_resp, 'http://127.0.0.1:6543/lesson/\d*/dep_info/\d*')
+        if lesson_link:
+            lesson_info = self.client.get(lesson_link)
+            unregister_dep = find_lesson_id(lesson_info, 'http://127.0.0.1:6543/lesson/\d*/unregister/\d*/')
+            if unregister_dep:
                 self.client.post(unregister_dep)
         else:
             pass
@@ -235,8 +244,6 @@ class RandomBehavior(TaskSet):
 
 class WebsiteUser(HttpUser):
     tasks = {
-        NewUserBehavior: 1,
-		ExistingUserBehavior: 10,
 		RandomBehavior: 1
     }
     wait_time = between(3.0, 10.5)
