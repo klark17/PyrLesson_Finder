@@ -6,7 +6,9 @@ def includeme(config):
     config.add_route('auth', '/auth/{action}')
     config.add_route('search', '/search')
     config.add_route('results', '/search/results')
-    config.add_route('register', '/search/results/{lesson_id}/register', factory='PyrLesson_Finder.security.UserFactory')
+    config.add_route('register',
+                     '/search/results/{lesson_id}/register',
+                     factory='PyrLesson_Finder.security.UserFactory')
     config.add_route('register_self', '/search/results/{lesson_id}/register_self', factory='PyrLesson_Finder.security.UserFactory')
     config.add_route('register_dep', '/search/results/{lesson_id}/register_dep/', factory='PyrLesson_Finder.security.UserFactory')
     config.add_route('profile', '/profile/{id}', factory='PyrLesson_Finder.security.UserFactory')

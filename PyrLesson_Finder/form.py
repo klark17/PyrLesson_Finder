@@ -91,7 +91,3 @@ class EditRegistrationForm(Form):
                                validators=[Optional()],
                              filters=[strip_filter])
     submit = SubmitField('Submit Changes')
-
-
-
-
